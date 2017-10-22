@@ -13,11 +13,12 @@ public class NucleotideCountTest {
 
 	@Test
 	public void test() throws IOException {
-		Text value = new Text("");
+		Text key	= new Text("Teste");		
+		Text value 	= new Text("");
 
 		new MapDriver<Object, Text, Text, IntWritable>()
 			.withMapper(new NucleotideMapper())
-			.withInput("Teste", value)
+			.withInput(key, value)
 			.runTest();
 	}
 }
