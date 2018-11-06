@@ -37,11 +37,11 @@
 			<version>${hadoop.version}</version>
 		</dependency>
 
-<!--  		<dependency> -->
-<!-- 			<groupId>it.uniroma1.dss</groupId> -->
-<!-- 			<artifactId>fastdoop</artifactId> -->
-<!-- 			<version>1.0.0</version> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>it.uniroma1.dss</groupId>
+			<artifactId>fastdoop</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 		<!-- Unit test artifacts -->
 		<dependency>
@@ -69,6 +69,7 @@
 
 	<build>
 		<finalName>genuvem</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -83,17 +84,48 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.5</version>
+				<!-- <version>2.5</version> -->
 				<configuration>
-					<outputDirectory>${basedir}</outputDirectory>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+					<manifestEntries>
+						<Class-Path>../target/classes</Class-Path>
+					</manifestEntries>
+					<!-- <outputDirectory>${basedir}/package</outputDirectory> -->
 				</configuration>
 			</plugin>
 
-			<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <executions> 
-				<execution> <phase>package</phase> <goals> <goal>single</goal> </goals> </execution> 
-				</executions> <configuration> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
-				</descriptorRefs> </configuration> </plugin> -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<addClasspath>true</addClasspath>
+									<mainClass>genuvem.index.IndexBuilderDriver</mainClass>
+								</manifest>
+								<manifestEntries>
+									<Class-Path>../target/classes</Class-Path>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
-
 </project>

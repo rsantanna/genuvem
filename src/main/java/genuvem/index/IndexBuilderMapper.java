@@ -2,44 +2,73 @@ package genuvem.index;
 
 import java.io.IOException;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.log4j.Logger;
 
 import fastdoop.PartialSequence;
+import genuvem.io.IndexEntryWritable;
 
-public class IndexBuilderMapper extends Mapper<Text, PartialSequence, Text, Text> {
+public class IndexBuilderMapper
+		extends Mapper<Text, PartialSequence, Text, IndexEntryWritable> {
 
-	private static final int K_MER_LENGTH = 16;
+	private Logger logger = Logger.getLogger(IndexBuilderMapper.class);
+
+	private int kmerLength;
 
 	@Override
-	protected void map(Text key, PartialSequence value, Context context) throws IOException, InterruptedException {
+	protected void setup(Context context)
+			throws IOException, InterruptedException {
+		super.setup(context);
 
-		String header = value.getHeader();
+		Configuration conf = context.getConfiguration();
+		kmerLength = conf.getInt("genuvem.kmerlength", 16);
+	}
+
+	@Override
+	protected void map(Text key, PartialSequence value, Context context)
+			throws IOException, InterruptedException {
+
+		int header = Integer.parseInt(value.getHeader());
+
+		logger.info("Cleaning up line breaks in file " + header + ".");
 		String seq = value.getValue().replace("\n", "");
-
-		Text outKey = new Text();
-		Text outVal = new Text();
 
 		int currentIndex = 0;
 
-		while (seq.length() >= currentIndex + K_MER_LENGTH) {
-			outKey.set(header + String.format("_%05d_", currentIndex) + value.getStartValue() + "_" + value.getEndValue());
+		logger.info("Starting mapping index entries in file " + header + ".");
+		while (seq.length() >= currentIndex + kmerLength) {
+			String subSeq = seq.substring(currentIndex,
+					currentIndex + kmerLength);
 
-			String subSeq = seq.substring(currentIndex, currentIndex + K_MER_LENGTH);
-			outVal.set(subSeq);
-			context.write(outKey, outVal);
+			Text outKey = new Text();
+			outKey.set(subSeq);
 
-			currentIndex += K_MER_LENGTH;
+			IndexEntryWritable outValue = new IndexEntryWritable();
+			outValue.setSequenceId(new IntWritable(header));
+			outValue.setPosition(new IntWritable(currentIndex));
+
+			context.write(outKey, outValue);
+
+			currentIndex += 1;
 		}
 
 		if (currentIndex < seq.length()) {
-			outKey.set(header + String.format("_%05d", currentIndex));
-
 			String subSeq = seq.substring(currentIndex, seq.length());
-			outVal.set(subSeq);
-			context.write(outKey, outVal);
+
+			Text outKey = new Text();
+			outKey.set(subSeq);
+
+			IndexEntryWritable outValue = new IndexEntryWritable();
+			outValue.setSequenceId(new IntWritable(header));
+			outValue.setPosition(new IntWritable(currentIndex));
+
+			context.write(outKey, outValue);
 		}
 
+		logger.info("Mapper for file " + header + " has finished.");
 	}
 
 }
