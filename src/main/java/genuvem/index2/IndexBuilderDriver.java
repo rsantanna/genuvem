@@ -1,4 +1,7 @@
-package genuvem.index;
+package genuvem.index2;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -24,32 +27,23 @@ public class IndexBuilderDriver extends Configured implements Tool {
 	@Override
 	public int run(String[] args) throws Exception {
 
-		String inputPath = args[1];
-		String outputPath = args[2];
+		Path inputPath = new Path(args[1]);
+		Path outputPath = new Path(args[2]);
 
 		Configuration conf = getConf();
 		Job job = Job.getInstance(conf, JOB_NAME);
 
 		FileSystem fs = FileSystem.get(new Configuration());
-		fs.delete(new Path(outputPath), true);
+		fs.delete(outputPath, true);
 
-		FASTAlongInputFileFormat.addInputPath(job, new Path(inputPath));
-		FileOutputFormat.setOutputPath(job, new Path(outputPath));
+		FASTAlongInputFileFormat.addInputPath(job, inputPath);
+		FileOutputFormat.setOutputPath(job, outputPath);
 
 		job.setJarByClass(IndexBuilderDriver.class);
 
 		job.setInputFormatClass(FASTAlongInputFileFormat.class);
-		// job.setOutputFormatClass(TextOutputFormat.class);
 
-		// setting up an output file for each sequence within the input directory
-		RemoteIterator<LocatedFileStatus> remoteIterator = fs.listFiles(new Path(inputPath), false);
-
-		while (remoteIterator.hasNext()) {
-			LocatedFileStatus fileStatus = remoteIterator.next();
-			Path filePath = fileStatus.getPath();
-
-			MultipleOutputs.addNamedOutput(job, "idx" + filePath.getName(), TextOutputFormat.class, Text.class, Text.class);
-		}
+		createMultipleOutputs(inputPath, job, fs);
 
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(IndexEntryWritable.class);
@@ -62,6 +56,19 @@ public class IndexBuilderDriver extends Configured implements Tool {
 
 		return (job.waitForCompletion(true) ? 0 : 1);
 
+	}
+
+	private void createMultipleOutputs(Path inputPath, Job job, FileSystem fs)
+			throws FileNotFoundException, IOException {
+		RemoteIterator<LocatedFileStatus> remoteIterator = fs.listFiles(inputPath, false);
+
+		while (remoteIterator.hasNext()) {
+			LocatedFileStatus fileStatus = remoteIterator.next();
+			Path filePath = fileStatus.getPath();
+
+			MultipleOutputs.addNamedOutput(job, "idx" + filePath.getName(), TextOutputFormat.class, Text.class,
+					Text.class);
+		}
 	}
 
 	public static void main(String[] args) throws Exception {

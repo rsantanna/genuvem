@@ -1,4 +1,4 @@
-package genuvem.index;
+package genuvem.index2;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -81,6 +81,7 @@ public class IndexEntryWritable
 
 	@Override
 	public int compareTo(IndexEntryWritable that) {
-		return getPosition().compareTo(that.getPosition());
+		int result = getSequenceId().compareTo(that.getSequenceId());	
+		return result != 0 ? result : getPosition().compareTo(that.getPosition());
 	}
 }
