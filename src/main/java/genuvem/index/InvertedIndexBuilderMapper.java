@@ -11,10 +11,10 @@ import org.apache.log4j.Logger;
 import fastdoop.PartialSequence;
 import genuvem.io.IndexEntryWritable;
 
-public class IndexBuilderMapper
+public class InvertedIndexBuilderMapper
 		extends Mapper<Text, PartialSequence, Text, IndexEntryWritable> {
 
-	private Logger logger = Logger.getLogger(IndexBuilderMapper.class);
+	private Logger logger = Logger.getLogger(InvertedIndexBuilderMapper.class);
 
 	private int kmerLength;
 

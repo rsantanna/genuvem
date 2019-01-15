@@ -123,7 +123,7 @@
 							<archive>
 								<manifest>
 									<addClasspath>true</addClasspath>
-									<mainClass>genuvem.index.IndexBuilderDriver</mainClass>
+									<mainClass>genuvem.index.positional.PositionalIndexBuilderDriver</mainClass>
 								</manifest>
 								<manifestEntries>
 									<Class-Path>../target/classes</Class-Path>

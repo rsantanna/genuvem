@@ -12,9 +12,9 @@ import org.apache.log4j.Logger;
 
 import genuvem.io.IndexEntryWritable;
 
-public class IndexBuilderReducer extends Reducer<Text, IndexEntryWritable, Text, Text> {
+public class InvertedIndexBuilderReducer extends Reducer<Text, IndexEntryWritable, Text, Text> {
 
-	private Logger logger = Logger.getLogger(IndexBuilderReducer.class);
+	private Logger logger = Logger.getLogger(InvertedIndexBuilderReducer.class);
 
 	private MultipleOutputs<Text, Text> mos;
 
