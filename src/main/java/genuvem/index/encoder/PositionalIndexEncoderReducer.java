@@ -1,4 +1,4 @@
-package genuvem.index.positional;
+package genuvem.index.encoder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ import org.apache.log4j.Logger;
 import genuvem.io.IndexKeyWritable;
 import genuvem.io.IntArrayWritable;
 
-public class PositionalIndexBuilderReducer
+public class PositionalIndexEncoderReducer
 		extends Reducer<IndexKeyWritable, IntWritable, IndexKeyWritable, IntArrayWritable> {
 
-	private Logger logger = Logger.getLogger(PositionalIndexBuilderReducer.class);
+	private Logger logger = Logger.getLogger(PositionalIndexEncoderReducer.class);
 
 	@Override
 	protected void reduce(IndexKeyWritable key, Iterable<IntWritable> values, Context context)

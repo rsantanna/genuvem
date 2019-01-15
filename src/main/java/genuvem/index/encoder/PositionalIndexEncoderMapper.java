@@ -1,4 +1,4 @@
-package genuvem.index.positional;
+package genuvem.index.encoder;
 
 import java.io.IOException;
 
@@ -11,9 +11,9 @@ import org.apache.log4j.Logger;
 import fastdoop.PartialSequence;
 import genuvem.io.IndexKeyWritable;
 
-public class PositionalIndexBuilderMapper extends Mapper<Text, PartialSequence, IndexKeyWritable, IntWritable> {
+public class PositionalIndexEncoderMapper extends Mapper<Text, PartialSequence, IndexKeyWritable, IntWritable> {
 
-	private Logger logger = Logger.getLogger(PositionalIndexBuilderMapper.class);
+	private Logger logger = Logger.getLogger(PositionalIndexEncoderMapper.class);
 
 	private int kmerLength;
 
