@@ -16,8 +16,7 @@ public class PositionalIndexDecoderMapper extends Mapper<IndexKeyWritable, IntAr
 	private int filteredSequenceId;
 
 	@Override
-	protected void setup(Mapper<IndexKeyWritable, IntArrayWritable, IntWritable, Text>.Context context)
-			throws IOException, InterruptedException {
+	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 
 		Configuration conf = context.getConfiguration();
@@ -32,10 +31,10 @@ public class PositionalIndexDecoderMapper extends Mapper<IndexKeyWritable, IntAr
 
 		if (filteredSequenceId == sequenceIdWritable.get()) {
 			for (Writable w : value.get()) {
-				context.write((IntWritable)w, key.getSubsequence());
+				context.write((IntWritable) w, key.getSubsequence());
 			}
 		}
-		
+
 	}
 
 }

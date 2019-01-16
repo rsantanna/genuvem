@@ -12,7 +12,7 @@ public class PositionalIndexDecoderReducer extends Reducer<IntWritable, Text, In
 	private int kmerLength;
 
 	@Override
-	protected void setup(Reducer<IntWritable, Text, IntWritable, Text>.Context context)
+	protected void setup(Context context)
 			throws IOException, InterruptedException {
 		super.setup(context);
 
