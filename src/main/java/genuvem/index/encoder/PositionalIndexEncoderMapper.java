@@ -45,9 +45,10 @@ public class PositionalIndexEncoderMapper extends Mapper<Text, PartialSequence, 
 
 			IntWritable outValue = new IntWritable(currentIndex);
 
+			logger.debug("Output at index " + currentIndex + " is [" + outKey + ", " + outValue + "]");
 			context.write(outKey, outValue);
 
-			currentIndex += 1;
+			currentIndex++;
 		}
 
 		if (currentIndex < seq.length()) {
@@ -59,6 +60,7 @@ public class PositionalIndexEncoderMapper extends Mapper<Text, PartialSequence, 
 
 			IntWritable outValue = new IntWritable(currentIndex);
 
+			logger.debug("Output at index " + currentIndex + " is [" + outKey + ", " + outValue + "]");
 			context.write(outKey, outValue);
 		}
 

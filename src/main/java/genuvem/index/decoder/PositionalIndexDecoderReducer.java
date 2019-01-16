@@ -12,8 +12,7 @@ public class PositionalIndexDecoderReducer extends Reducer<IntWritable, Text, In
 	private int kmerLength;
 
 	@Override
-	protected void setup(Context context)
-			throws IOException, InterruptedException {
+	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 
 		Configuration conf = context.getConfiguration();

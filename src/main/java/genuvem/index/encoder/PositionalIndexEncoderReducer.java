@@ -25,15 +25,14 @@ public class PositionalIndexEncoderReducer
 		List<IntWritable> list = new ArrayList<IntWritable>();
 
 		for (IntWritable iw : values) {
-			list.add(iw);
+			list.add(new IntWritable(iw.get()));
 		}
 
-		logger.debug("Finished building list at reducer for key " + key + ". " + list.size() + " elements added.");
+		IntArrayWritable outValue = new IntArrayWritable(list.toArray(new IntWritable[list.size()]));
 
-		IntArrayWritable outValue = new IntArrayWritable(list.toArray(new IntWritable[] {}));
 		context.write(key, outValue);
 
-		logger.debug("Reducer for key " + key + " has finished.");
+		logger.debug("Reducer for key " + key + " has finished. Out value is " + outValue + ".");
 
 	}
 
