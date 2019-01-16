@@ -23,16 +23,16 @@ public class PositionalIndexEncoderDriver extends Configured implements Tool {
 
 	@Override
 	public int run(String[] args) throws Exception {
-		Path inputPath = new Path(args[1]);
-		Path outputPath = new Path(args[2]);
+		Path inputPath = new Path(args[0]);
+		Path outputPath = new Path(args[1]);
 
-		Configuration conf = getConf();
-		Job job = getJobInstance(inputPath, outputPath, conf);
+		Configuration conf = super.getConf();
+		Job job = getJobInstance(conf, inputPath, outputPath);
 
 		return (job.waitForCompletion(true) ? 0 : 1);
 	}
 
-	private Job getJobInstance(Path inputPath, Path outputPath, Configuration conf) throws IOException {
+	private Job getJobInstance(Configuration conf, Path inputPath, Path outputPath) throws IOException {
 		Job job = Job.getInstance(conf, JOB_NAME);
 
 		FileSystem fs = FileSystem.get(new Configuration());
@@ -59,7 +59,7 @@ public class PositionalIndexEncoderDriver extends Configured implements Tool {
 	}
 
 	public static void main(String[] args) throws Exception {
-		int exitCode = ToolRunner.run(new PositionalIndexEncoderDriver(), args);
+		int exitCode = ToolRunner.run(new Configuration(), new PositionalIndexEncoderDriver(), args);
 		System.exit(exitCode);
 	}
 }
