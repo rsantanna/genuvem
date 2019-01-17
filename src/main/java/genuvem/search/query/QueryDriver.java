@@ -1,4 +1,4 @@
-package genuvem.index.decoder;
+package genuvem.search.query;
 
 import java.io.IOException;
 
@@ -10,14 +10,15 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-public class PositionalIndexDecoderDriver extends Configured implements Tool {
+import genuvem.io.SequencePositionWritable;
 
-	private static final String JOB_NAME = "Genuvem | Positional Inverted Index Decoder";
+public class QueryDriver extends Configured implements Tool {
+
+	private static final String JOB_NAME = "Genuvem | Query";
 
 	@Override
 	public int run(String[] args) throws Exception {
@@ -37,27 +38,27 @@ public class PositionalIndexDecoderDriver extends Configured implements Tool {
 		fs.delete(outputPath, true);
 
 		SequenceFileInputFormat.addInputPath(job, inputPath);
-		FileOutputFormat.setOutputPath(job, outputPath);
+		TextOutputFormat.setOutputPath(job, outputPath);
 
-		job.setJarByClass(PositionalIndexDecoderDriver.class);
+		job.setJarByClass(QueryDriver.class);
 
 		job.setInputFormatClass(SequenceFileInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
 
 		job.setMapOutputKeyClass(IntWritable.class);
-		job.setMapOutputValueClass(Text.class);
+		job.setMapOutputValueClass(SequencePositionWritable.class);
 
 		job.setOutputKeyClass(IntWritable.class);
 		job.setOutputValueClass(Text.class);
 
-		job.setMapperClass(PositionalIndexDecoderMapper.class);
-		job.setReducerClass(PositionalIndexDecoderReducer.class);
+		job.setMapperClass(QueryMapper.class);
+		job.setReducerClass(QueryReducer.class);
 
 		return job;
 	}
 
 	public static void main(String[] args) throws Exception {
-		int exitCode = ToolRunner.run(new Configuration(), new PositionalIndexDecoderDriver(), args);
+		int exitCode = ToolRunner.run(new Configuration(), new QueryDriver(), args);
 		System.exit(exitCode);
 	}
 }

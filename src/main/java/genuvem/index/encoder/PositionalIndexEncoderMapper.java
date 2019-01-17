@@ -48,7 +48,7 @@ public class PositionalIndexEncoderMapper extends Mapper<Text, PartialSequence, 
 			logger.debug("Output at index " + currentIndex + " is [" + outKey + ", " + outValue + "]");
 			context.write(outKey, outValue);
 
-			currentIndex++;
+			currentIndex += kmerLength;
 		}
 
 		if (currentIndex < seq.length()) {
