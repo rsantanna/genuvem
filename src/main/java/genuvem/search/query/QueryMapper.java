@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import genuvem.io.IndexKeyWritable;
@@ -40,10 +41,12 @@ public class QueryMapper extends Mapper<IndexKeyWritable, IntArrayWritable, IntW
 			if (subsequence.equals(indexSubsequence.toString())) {
 				queryIndex.set(i);
 
-				matchPosition.getPosition().set(i);
-				matchPosition.setSequenceId(key.getSequenceId());
-
-				context.write(queryIndex, matchPosition);
+				for (Writable w : value.get()) {
+					matchPosition.setSequenceId(key.getSequenceId());
+					matchPosition.setPosition((IntWritable) w);
+					
+					context.write(queryIndex, matchPosition);
+				}
 			}
 		}
 	}

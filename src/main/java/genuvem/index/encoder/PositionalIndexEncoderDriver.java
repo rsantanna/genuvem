@@ -10,6 +10,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -33,6 +34,9 @@ public class PositionalIndexEncoderDriver extends Configured implements Tool {
 	}
 
 	private Job getJobInstance(Configuration conf, Path inputPath, Path outputPath) throws IOException {
+
+		boolean readableOutput = conf.getBoolean("readableOutput", false);
+
 		Job job = Job.getInstance(conf, JOB_NAME);
 
 		FileSystem fs = FileSystem.get(new Configuration());
@@ -44,7 +48,12 @@ public class PositionalIndexEncoderDriver extends Configured implements Tool {
 		job.setJarByClass(PositionalIndexEncoderDriver.class);
 
 		job.setInputFormatClass(FASTAlongInputFileFormat.class);
-		job.setOutputFormatClass(SequenceFileOutputFormat.class);
+
+		if (readableOutput) {
+			job.setOutputFormatClass(TextOutputFormat.class);
+		} else {
+			job.setOutputFormatClass(SequenceFileOutputFormat.class);
+		}
 
 		job.setMapOutputKeyClass(IndexKeyWritable.class);
 		job.setMapOutputValueClass(IntWritable.class);
