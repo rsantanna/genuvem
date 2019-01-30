@@ -9,10 +9,10 @@ import org.apache.hadoop.io.WritableComparable;
 
 public class HighScoringPairWritable implements Writable, WritableComparable<HighScoringPairWritable> {
 
-	private IndexKeyWritable queryPosition;
-	private IndexKeyWritable matchPosition;
+	private TextIntWritable queryPosition;
+	private TextIntWritable matchPosition;
 
-	public HighScoringPairWritable(IndexKeyWritable queryPosition, IndexKeyWritable matchPosition) {
+	public HighScoringPairWritable(TextIntWritable queryPosition, TextIntWritable matchPosition) {
 		this.queryPosition = queryPosition;
 		this.matchPosition = matchPosition;
 	}
@@ -29,19 +29,19 @@ public class HighScoringPairWritable implements Writable, WritableComparable<Hig
 		matchPosition.write(out);
 	}
 
-	public IndexKeyWritable getQueryPosition() {
+	public TextIntWritable getQueryPosition() {
 		return queryPosition;
 	}
 
-	public void setQueryPosition(IndexKeyWritable queryPosition) {
+	public void setQueryPosition(TextIntWritable queryPosition) {
 		this.queryPosition = queryPosition;
 	}
 
-	public IndexKeyWritable getMatchPosition() {
+	public TextIntWritable getMatchPosition() {
 		return matchPosition;
 	}
 
-	public void setMatchPosition(IndexKeyWritable matchPosition) {
+	public void setMatchPosition(TextIntWritable matchPosition) {
 		this.matchPosition = matchPosition;
 	}
 

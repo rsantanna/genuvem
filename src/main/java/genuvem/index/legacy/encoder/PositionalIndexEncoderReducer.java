@@ -1,4 +1,4 @@
-package genuvem.index.encoder;
+package genuvem.index.legacy.encoder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,16 +8,16 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.log4j.Logger;
 
-import genuvem.io.IndexKeyWritable;
+import genuvem.io.TextIntWritable;
 import genuvem.io.IntArrayWritable;
 
 public class PositionalIndexEncoderReducer
-		extends Reducer<IndexKeyWritable, IntWritable, IndexKeyWritable, IntArrayWritable> {
+		extends Reducer<TextIntWritable, IntWritable, TextIntWritable, IntArrayWritable> {
 
 	private Logger logger = Logger.getLogger(PositionalIndexEncoderReducer.class);
 
 	@Override
-	protected void reduce(IndexKeyWritable key, Iterable<IntWritable> values, Context context)
+	protected void reduce(TextIntWritable key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
 
 		logger.debug("Start building output list at reducer for key " + key + ".");

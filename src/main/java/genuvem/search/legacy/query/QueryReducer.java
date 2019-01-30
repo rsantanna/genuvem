@@ -1,4 +1,4 @@
-package genuvem.search.query;
+package genuvem.search.legacy.query;
 
 import java.io.IOException;
 

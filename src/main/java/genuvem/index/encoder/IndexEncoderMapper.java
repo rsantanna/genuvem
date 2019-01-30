@@ -9,11 +9,11 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 
 import fastdoop.PartialSequence;
-import genuvem.io.IndexKeyWritable;
+import genuvem.io.TextIntWritable;
 
-public class PositionalIndexEncoderMapper extends Mapper<Text, PartialSequence, IndexKeyWritable, IntWritable> {
+public class IndexEncoderMapper extends Mapper<Text, PartialSequence, IntWritable, TextIntWritable> {
 
-	private Logger logger = Logger.getLogger(PositionalIndexEncoderMapper.class);
+	private Logger logger = Logger.getLogger(IndexEncoderMapper.class);
 
 	private int kmerLength;
 
@@ -22,13 +22,14 @@ public class PositionalIndexEncoderMapper extends Mapper<Text, PartialSequence, 
 		super.setup(context);
 
 		Configuration conf = context.getConfiguration();
-		kmerLength = conf.getInt("genuvem.kmerlength", 16);
+		kmerLength = conf.getInt("kmerlength", 16);
 	}
 
 	@Override
 	protected void map(Text key, PartialSequence value, Context context) throws IOException, InterruptedException {
 
 		int header = Integer.parseInt(value.getHeader());
+		IntWritable outKey = new IntWritable(header);
 
 		logger.debug("Cleaning up line breaks in file " + header + ".");
 		String seq = value.getValue().replace("\n", "");
@@ -39,11 +40,9 @@ public class PositionalIndexEncoderMapper extends Mapper<Text, PartialSequence, 
 		while (seq.length() >= currentIndex + kmerLength) {
 			String subSeq = seq.substring(currentIndex, currentIndex + kmerLength);
 
-			IndexKeyWritable outKey = new IndexKeyWritable();
-			outKey.setSubsequence(new Text(subSeq));
-			outKey.setSequenceId(new IntWritable(header));
-
-			IntWritable outValue = new IntWritable(currentIndex);
+			TextIntWritable outValue = new TextIntWritable();
+			outValue.setText(new Text(subSeq));
+			outValue.setInteger(new IntWritable(currentIndex));
 
 			logger.debug("Output at index " + currentIndex + " is [" + outKey + ", " + outValue + "]");
 			context.write(outKey, outValue);
@@ -54,11 +53,9 @@ public class PositionalIndexEncoderMapper extends Mapper<Text, PartialSequence, 
 		if (currentIndex < seq.length()) {
 			String subSeq = seq.substring(currentIndex, seq.length());
 
-			IndexKeyWritable outKey = new IndexKeyWritable();
-			outKey.setSubsequence(new Text(subSeq));
-			outKey.setSequenceId(new IntWritable(header));
-
-			IntWritable outValue = new IntWritable(currentIndex);
+			TextIntWritable outValue = new TextIntWritable();
+			outValue.setText(new Text(subSeq));
+			outValue.setInteger(new IntWritable(currentIndex));
 
 			logger.debug("Output at index " + currentIndex + " is [" + outKey + ", " + outValue + "]");
 			context.write(outKey, outValue);

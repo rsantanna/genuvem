@@ -1,4 +1,4 @@
-package genuvem.index.decoder;
+package genuvem.index.legacy.decoder;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ public class PositionalIndexDecoderReducer extends Reducer<IntWritable, Text, In
 		super.setup(context);
 
 		Configuration conf = context.getConfiguration();
-		kmerLength = conf.getInt("genuvem.kmerlength", 16);
+		kmerLength = conf.getInt("kmerlength", 16);
 	}
 
 	@Override

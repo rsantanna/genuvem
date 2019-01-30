@@ -1,4 +1,4 @@
-package genuvem.search.query;
+package genuvem.index.legacy.decoder;
 
 import java.io.IOException;
 
@@ -10,15 +10,14 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import genuvem.io.IntIntWritable;
+public class PositionalIndexDecoderDriver extends Configured implements Tool {
 
-public class QueryDriver extends Configured implements Tool {
-
-	private static final String JOB_NAME = "Genuvem | Query";
+	private static final String JOB_NAME = "Genuvem | Positional Inverted Index Decoder";
 
 	@Override
 	public int run(String[] args) throws Exception {
@@ -38,27 +37,27 @@ public class QueryDriver extends Configured implements Tool {
 		fs.delete(outputPath, true);
 
 		SequenceFileInputFormat.addInputPath(job, inputPath);
-		TextOutputFormat.setOutputPath(job, outputPath);
+		FileOutputFormat.setOutputPath(job, outputPath);
 
-		job.setJarByClass(QueryDriver.class);
+		job.setJarByClass(PositionalIndexDecoderDriver.class);
 
 		job.setInputFormatClass(SequenceFileInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
 
 		job.setMapOutputKeyClass(IntWritable.class);
-		job.setMapOutputValueClass(IntIntWritable.class);
+		job.setMapOutputValueClass(Text.class);
 
 		job.setOutputKeyClass(IntWritable.class);
 		job.setOutputValueClass(Text.class);
 
-		job.setMapperClass(QueryMapper.class);
-		job.setReducerClass(QueryReducer.class);
+		job.setMapperClass(PositionalIndexDecoderMapper.class);
+		job.setReducerClass(PositionalIndexDecoderReducer.class);
 
 		return job;
 	}
 
 	public static void main(String[] args) throws Exception {
-		int exitCode = ToolRunner.run(new Configuration(), new QueryDriver(), args);
+		int exitCode = ToolRunner.run(new Configuration(), new PositionalIndexDecoderDriver(), args);
 		System.exit(exitCode);
 	}
 }

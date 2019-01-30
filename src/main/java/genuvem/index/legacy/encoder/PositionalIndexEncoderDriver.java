@@ -1,4 +1,4 @@
-package genuvem.index.encoder;
+package genuvem.index.legacy.encoder;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 import fastdoop.FASTAlongInputFileFormat;
-import genuvem.io.IndexKeyWritable;
+import genuvem.io.TextIntWritable;
 import genuvem.io.IntArrayWritable;
 
 public class PositionalIndexEncoderDriver extends Configured implements Tool {
@@ -55,10 +55,10 @@ public class PositionalIndexEncoderDriver extends Configured implements Tool {
 			job.setOutputFormatClass(SequenceFileOutputFormat.class);
 		}
 
-		job.setMapOutputKeyClass(IndexKeyWritable.class);
+		job.setMapOutputKeyClass(TextIntWritable.class);
 		job.setMapOutputValueClass(IntWritable.class);
 
-		job.setOutputKeyClass(IndexKeyWritable.class);
+		job.setOutputKeyClass(TextIntWritable.class);
 		job.setOutputValueClass(IntArrayWritable.class);
 
 		job.setMapperClass(PositionalIndexEncoderMapper.class);

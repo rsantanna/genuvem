@@ -1,18 +1,18 @@
-package genuvem.search.query;
+package genuvem.search.legacy.query;
 
 import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
 
+import genuvem.io.TextIntWritable;
+import genuvem.io.IntArrayWritable;
 import genuvem.io.IntIntWritable;
 
-public class QueryMapper extends Mapper<IntWritable, MapWritable, IntWritable, IntIntWritable> {
+public class QueryMapper extends Mapper<TextIntWritable, IntArrayWritable, IntWritable, IntIntWritable> {
 
 	private String query;
 	private int kmerLength;
@@ -23,33 +23,30 @@ public class QueryMapper extends Mapper<IntWritable, MapWritable, IntWritable, I
 
 		Configuration conf = context.getConfiguration();
 		query = conf.get("query");
-		kmerLength = conf.getInt("kmerlength", 16);
+		kmerLength = conf.getInt("genuvem.kmerlength", 16);
 	}
 
 	@Override
-	protected void map(IntWritable sequenceId, MapWritable map, Context context)
+	protected void map(TextIntWritable key, IntArrayWritable value, Context context)
 			throws IOException, InterruptedException {
+		Text indexSubsequence = key.getText();
 
 		IntWritable queryIndex = new IntWritable();
 		IntIntWritable matchPosition = new IntIntWritable();
 
-		Text subsequence = new Text();
-		
 		for (int i = 0; i <= query.length() - kmerLength; i++) {
 
-			subsequence.set(query.substring(i, i + kmerLength));
+			String subsequence = query.substring(i, i + kmerLength);
 
-			if (map.containsKey(subsequence)) {
+			if (subsequence.equals(indexSubsequence.toString())) {
 				queryIndex.set(i);
 
-				ArrayWritable a = (ArrayWritable) map.get(subsequence);
-				
-				for (Writable w : a.get()) {
-					matchPosition.setInt1(sequenceId);
+				for (Writable w : value.get()) {
+					matchPosition.setInt1(key.getInteger());
 					matchPosition.setInt2((IntWritable) w);
 					
 					context.write(queryIndex, matchPosition);
-				}				
+				}
 			}
 		}
 	}

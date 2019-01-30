@@ -1,4 +1,4 @@
-package genuvem.index.decoder;
+package genuvem.index.legacy.decoder;
 
 import java.io.IOException;
 
@@ -8,10 +8,10 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import genuvem.io.IndexKeyWritable;
+import genuvem.io.TextIntWritable;
 import genuvem.io.IntArrayWritable;
 
-public class PositionalIndexDecoderMapper extends Mapper<IndexKeyWritable, IntArrayWritable, IntWritable, Text> {
+public class PositionalIndexDecoderMapper extends Mapper<TextIntWritable, IntArrayWritable, IntWritable, Text> {
 
 	private int filteredSequenceId;
 
@@ -24,14 +24,14 @@ public class PositionalIndexDecoderMapper extends Mapper<IndexKeyWritable, IntAr
 	}
 
 	@Override
-	protected void map(IndexKeyWritable key, IntArrayWritable value, Context context)
+	protected void map(TextIntWritable key, IntArrayWritable value, Context context)
 			throws IOException, InterruptedException {
 
-		IntWritable sequenceIdWritable = key.getSequenceId();
+		IntWritable sequenceIdWritable = key.getInteger();
 
 		if (filteredSequenceId == sequenceIdWritable.get()) {
 			for (Writable w : value.get()) {
-				context.write((IntWritable) w, key.getSubsequence());
+				context.write((IntWritable) w, key.getText());
 			}
 		}
 
