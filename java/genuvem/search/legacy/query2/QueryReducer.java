@@ -1,4 +1,4 @@
-package genuvem.search.legacy.query;
+package genuvem.search.legacy.query2;
 
 import java.io.IOException;
 
@@ -18,12 +18,6 @@ public class QueryReducer extends Reducer<IntWritable, IntIntWritable, IntWritab
 	@Override
 	protected void reduce(IntWritable key, Iterable<IntIntWritable> values, Context context)
 			throws IOException, InterruptedException {
-		StringBuilder sb = new StringBuilder();
 
-		for (IntIntWritable w : values) {
-			sb.append(w + " ");
-		}
-
-		context.write(key, new Text(sb.toString()));
 	}
 }

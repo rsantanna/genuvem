@@ -1,4 +1,4 @@
-package genuvem.search.query;
+package genuvem.search.legacy.query2;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class QueryMapper extends Mapper<IntWritable, MapWritable, IntWritable, I
 		IntIntWritable matchPosition = new IntIntWritable();
 
 		Text subsequence = new Text();
-		
+
 		for (int i = 0; i <= query.length() - kmerLength; i++) {
 
 			subsequence.set(query.substring(i, i + kmerLength));
@@ -43,14 +43,15 @@ public class QueryMapper extends Mapper<IntWritable, MapWritable, IntWritable, I
 				queryIndex.set(i);
 
 				ArrayWritable a = (ArrayWritable) map.get(subsequence);
-				
+
 				for (Writable w : a.get()) {
 					matchPosition.setInt1(sequenceId);
 					matchPosition.setInt2((IntWritable) w);
-					
+
 					context.write(queryIndex, matchPosition);
-				}				
+				}
 			}
 		}
+		
 	}
 }

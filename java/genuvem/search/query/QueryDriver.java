@@ -1,4 +1,4 @@
-package genuvem.search.legacy.query;
+package genuvem.search.query;
 
 import java.io.IOException;
 
@@ -7,14 +7,14 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import genuvem.io.IntIntWritable;
+import genuvem.io.HighScoringPairWritable;
+import genuvem.io.QueryKeyWritable;
 
 public class QueryDriver extends Configured implements Tool {
 
@@ -45,11 +45,11 @@ public class QueryDriver extends Configured implements Tool {
 		job.setInputFormatClass(SequenceFileInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
 
-		job.setMapOutputKeyClass(IntWritable.class);
-		job.setMapOutputValueClass(IntIntWritable.class);
+		job.setMapOutputKeyClass(QueryKeyWritable.class);
+		job.setMapOutputValueClass(HighScoringPairWritable.class);
 
 		job.setOutputKeyClass(IntWritable.class);
-		job.setOutputValueClass(Text.class);
+		job.setOutputValueClass(HighScoringPairWritable.class);
 
 		job.setMapperClass(QueryMapper.class);
 		job.setReducerClass(QueryReducer.class);
