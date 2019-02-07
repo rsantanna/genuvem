@@ -34,11 +34,9 @@ public class QueryReducer
 
 		List<HighScoringPairWritable> list = new ArrayList<HighScoringPairWritable>();
 
-		for (HighScoringPairWritable value : values) {
-			boolean match = false;
-
-			if (!match) {
-				list.add(value.clone());
+		for (HighScoringPairWritable hsp : values) {
+			if (!tryMerge(hsp, list)) {
+				list.add(hsp.clone());
 			}
 		}
 
@@ -47,6 +45,22 @@ public class QueryReducer
 				context.write(key.getSequenceId(), hsp);
 			}
 		}
-
 	}
+
+	private boolean tryMerge(HighScoringPairWritable hsp, List<HighScoringPairWritable> list) {
+		boolean merge = false;
+
+		for (HighScoringPairWritable existing : list) {
+			if (hsp.getDatabaseSequenceStart() - existing.getDatabaseSequenceEnd() <= maxHspDistance
+					&& hsp.getQueryStart() - existing.getQueryEnd() <= maxHspDistance) {
+				existing.setQueryEnd(hsp.getQueryEnd());
+				existing.setDatabaseSequenceEnd(hsp.getDatabaseSequenceEnd());
+
+				merge = true;
+			}
+		}
+
+		return merge;
+	}
+
 }
