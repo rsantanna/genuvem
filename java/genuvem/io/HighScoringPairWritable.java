@@ -8,7 +8,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparable;
 
-public class HighScoringPairWritable implements Writable, WritableComparable<HighScoringPairWritable> {
+public class HighScoringPairWritable implements Writable, WritableComparable<HighScoringPairWritable>, Cloneable {
 
 	private IntWritable queryStart;
 	private IntWritable queryEnd;
@@ -29,44 +29,54 @@ public class HighScoringPairWritable implements Writable, WritableComparable<Hig
 		this.length = length;
 	}
 
-	public IntWritable getQueryStart() {
-		return queryStart;
+	public Integer getQueryStart() {
+		return queryStart.get();
 	}
 
-	public void setQueryStart(IntWritable queryStart) {
-		this.queryStart = queryStart;
+	public void setQueryStart(Integer queryStart) {
+		this.queryStart.set(queryStart);
+		calculateLength();
 	}
 
-	public IntWritable getQueryEnd() {
-		return queryEnd;
+	public Integer getQueryEnd() {
+		return queryEnd.get();
 	}
 
-	public void setQueryEnd(IntWritable queryEnd) {
-		this.queryEnd = queryEnd;
+	public void setQueryEnd(Integer queryEnd) {
+		this.queryEnd.set(queryEnd);
+		calculateLength();
 	}
 
-	public IntWritable getDatabaseSequenceStart() {
-		return databaseSequenceStart;
+	public Integer getDatabaseSequenceStart() {
+		return databaseSequenceStart.get();
 	}
 
-	public void setDatabaseSequenceStart(IntWritable databaseSequenceStart) {
-		this.databaseSequenceStart = databaseSequenceStart;
+	public void setDatabaseSequenceStart(Integer databaseSequenceStart) {
+		this.databaseSequenceStart.set(databaseSequenceStart);
+		calculateLength();
 	}
 
-	public IntWritable getDatabaseSequenceEnd() {
-		return databaseSequenceEnd;
+	public Integer getDatabaseSequenceEnd() {
+		return databaseSequenceEnd.get();
 	}
 
-	public void setDatabaseSequenceEnd(IntWritable databaseSequenceEnd) {
-		this.databaseSequenceEnd = databaseSequenceEnd;
+	public void setDatabaseSequenceEnd(Integer databaseSequenceEnd) {
+		this.databaseSequenceEnd.set(databaseSequenceEnd);
+		calculateLength();
 	}
 
-	public IntWritable getLength() {
-		return length;
+	public Integer getLength() {
+		calculateLength();
+		return length.get();
 	}
 
-	public void setLength(IntWritable length) {
-		this.length = length;
+	private void calculateLength() {
+		int queryDistance = getQueryEnd() - getQueryStart() + 1;
+		int databaseSequenceDistance = getDatabaseSequenceEnd() - getDatabaseSequenceStart() + 1;
+
+		int min = queryDistance < databaseSequenceDistance ? queryDistance : databaseSequenceDistance;
+
+		length.set(min);
 	}
 
 	@Override
@@ -147,6 +157,19 @@ public class HighScoringPairWritable implements Writable, WritableComparable<Hig
 		result = result != 0 ? result : this.getLength().compareTo(that.getLength());
 
 		return result;
+	}
+
+	@Override
+	public HighScoringPairWritable clone() {
+		HighScoringPairWritable hsp = new HighScoringPairWritable();
+
+		hsp.queryStart = new IntWritable(this.getQueryStart());
+		hsp.queryEnd = new IntWritable(this.getQueryEnd());
+		hsp.databaseSequenceStart = new IntWritable(this.getDatabaseSequenceStart());
+		hsp.databaseSequenceEnd = new IntWritable(this.getDatabaseSequenceEnd());
+		hsp.length = new IntWritable(this.getLength());
+
+		return hsp;
 	}
 
 	@Override

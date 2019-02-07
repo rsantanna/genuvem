@@ -13,8 +13,10 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import genuvem.comparator.QueryGroupingComparator;
 import genuvem.io.HighScoringPairWritable;
 import genuvem.io.QueryKeyWritable;
+import genuvem.partitioner.QueryPartitioner;
 
 public class QueryDriver extends Configured implements Tool {
 
@@ -53,6 +55,9 @@ public class QueryDriver extends Configured implements Tool {
 
 		job.setMapperClass(QueryMapper.class);
 		job.setReducerClass(QueryReducer.class);
+
+		job.setPartitionerClass(QueryPartitioner.class);
+		job.setGroupingComparatorClass(QueryGroupingComparator.class);
 
 		return job;
 	}
