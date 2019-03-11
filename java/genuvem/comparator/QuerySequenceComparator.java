@@ -3,19 +3,19 @@ package genuvem.comparator;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 
-import genuvem.io.QueryKeyWritable;
+import genuvem.io.SearchKeyWritable;
 
-public class QueryGroupingComparator extends WritableComparator {
+public class QuerySequenceComparator extends WritableComparator {
 
-	public QueryGroupingComparator() {
-		super(QueryKeyWritable.class, true);
+	public QuerySequenceComparator() {
+		super(SearchKeyWritable.class, true);
 	}
 
 	@Override
 	@SuppressWarnings("rawtypes")
 	public int compare(WritableComparable a, WritableComparable b) {
-		QueryKeyWritable key1 = (QueryKeyWritable) a;
-		QueryKeyWritable key2 = (QueryKeyWritable) b;
+		SearchKeyWritable key1 = (SearchKeyWritable) a;
+		SearchKeyWritable key2 = (SearchKeyWritable) b;
 		return key1.getSequenceId().compareTo(key2.getSequenceId());
 	}
 }

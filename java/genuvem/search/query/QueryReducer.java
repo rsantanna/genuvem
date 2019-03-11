@@ -9,10 +9,10 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import genuvem.io.HighScoringPairWritable;
-import genuvem.io.QueryKeyWritable;
+import genuvem.io.SearchKeyWritable;
 
 public class QueryReducer
-		extends Reducer<QueryKeyWritable, HighScoringPairWritable, IntWritable, HighScoringPairWritable> {
+		extends Reducer<SearchKeyWritable, HighScoringPairWritable, IntWritable, HighScoringPairWritable> {
 
 	int kmerLength;
 	int maxHspDistance;
@@ -29,7 +29,7 @@ public class QueryReducer
 	}
 
 	@Override
-	protected void reduce(QueryKeyWritable key, Iterable<HighScoringPairWritable> values, Context context)
+	protected void reduce(SearchKeyWritable key, Iterable<HighScoringPairWritable> values, Context context)
 			throws IOException, InterruptedException {
 
 		List<HighScoringPairWritable> list = new ArrayList<HighScoringPairWritable>();

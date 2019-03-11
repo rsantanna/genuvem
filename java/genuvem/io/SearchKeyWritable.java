@@ -8,16 +8,16 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparable;
 
-public class QueryKeyWritable implements Writable, WritableComparable<QueryKeyWritable> {
+public class SearchKeyWritable implements Writable, WritableComparable<SearchKeyWritable> {
 
 	private IntWritable sequenceId;
 	private HighScoringPairWritable hsp;
 
-	public QueryKeyWritable() {
+	public SearchKeyWritable() {
 		this(new IntWritable(), new HighScoringPairWritable());
 	}
 
-	public QueryKeyWritable(IntWritable sequenceId, HighScoringPairWritable hsp) {
+	public SearchKeyWritable(IntWritable sequenceId, HighScoringPairWritable hsp) {
 		this.sequenceId = sequenceId;
 		this.hsp = hsp;
 	}
@@ -67,7 +67,7 @@ public class QueryKeyWritable implements Writable, WritableComparable<QueryKeyWr
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		QueryKeyWritable other = (QueryKeyWritable) obj;
+		SearchKeyWritable other = (SearchKeyWritable) obj;
 		if (hsp == null) {
 			if (other.hsp != null)
 				return false;
@@ -82,7 +82,7 @@ public class QueryKeyWritable implements Writable, WritableComparable<QueryKeyWr
 	}
 
 	@Override
-	public int compareTo(QueryKeyWritable that) {
+	public int compareTo(SearchKeyWritable that) {
 		int result = this.getSequenceId().compareTo(that.getSequenceId());
 		return result != 0 ? result : this.getHsp().compareTo(that.getHsp());
 	}

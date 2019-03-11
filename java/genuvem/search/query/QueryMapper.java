@@ -11,9 +11,9 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import genuvem.io.HighScoringPairWritable;
-import genuvem.io.QueryKeyWritable;
+import genuvem.io.SearchKeyWritable;
 
-public class QueryMapper extends Mapper<IntWritable, MapWritable, QueryKeyWritable, HighScoringPairWritable> {
+public class QueryMapper extends Mapper<IntWritable, MapWritable, SearchKeyWritable, HighScoringPairWritable> {
 
 	private String query;
 	private int kmerLength;
@@ -34,7 +34,7 @@ public class QueryMapper extends Mapper<IntWritable, MapWritable, QueryKeyWritab
 		Text subsequence = new Text();
 
 		HighScoringPairWritable hsp = new HighScoringPairWritable();
-		QueryKeyWritable key = new QueryKeyWritable();
+		SearchKeyWritable key = new SearchKeyWritable();
 
 		for (int i = 0; i <= query.length() - kmerLength; i++) {
 
