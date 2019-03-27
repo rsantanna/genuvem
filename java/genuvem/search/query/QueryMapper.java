@@ -38,7 +38,7 @@ public class QueryMapper extends Mapper<IntWritable, MapWritable, SearchKeyWrita
 
 		for (int i = 0; i <= query.length() - kmerLength; i++) {
 
-			subsequence.set(query.substring(i, i + kmerLength));
+			subsequence.set(query.substring(i, i + kmerLength).toUpperCase());
 
 			if (map.containsKey(subsequence)) {
 				ArrayWritable intArray = (ArrayWritable) map.get(subsequence);

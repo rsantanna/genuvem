@@ -31,14 +31,17 @@ public class IndexEncoderMapper extends Mapper<Text, PartialSequence, IntWritabl
 		int header = Integer.parseInt(value.getHeader());
 		IntWritable outKey = new IntWritable(header);
 
-		logger.debug("Cleaning up line breaks in file " + header + ".");
-		String seq = value.getValue().replace("\n", "");
+		logger.debug("Cleaning up headers");
+		String seq = value.getValue().replaceAll(">.*$?m", "");
 
+		logger.debug("Cleaning up line breaks and whitespaces in file " + header + ".");
+		seq = seq.replaceAll("[ \t\r\n]", "");
+		
 		int currentIndex = 0;
 
 		logger.debug("Starting mapping index entries in file " + header + ".");
 		while (seq.length() >= currentIndex + kmerLength) {
-			String subSeq = seq.substring(currentIndex, currentIndex + kmerLength);
+			String subSeq = seq.substring(currentIndex, currentIndex + kmerLength).toUpperCase();
 
 			TextIntWritable outValue = new TextIntWritable();
 			outValue.setText(new Text(subSeq));
@@ -51,7 +54,7 @@ public class IndexEncoderMapper extends Mapper<Text, PartialSequence, IntWritabl
 		}
 
 		if (currentIndex < seq.length()) {
-			String subSeq = seq.substring(currentIndex, seq.length());
+			String subSeq = seq.substring(currentIndex, seq.length()).toUpperCase();
 
 			TextIntWritable outValue = new TextIntWritable();
 			outValue.setText(new Text(subSeq));
