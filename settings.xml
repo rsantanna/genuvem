@@ -1,0 +1,8 @@
+<settings>
+  <servers>
+    <server>
+      <id>ssh-repository</id>
+      <username>hduser</username>
+    </server>
+  </servers>
+</settings>
