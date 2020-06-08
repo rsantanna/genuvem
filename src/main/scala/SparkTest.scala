@@ -25,9 +25,10 @@ object SparkTest {
     val inputPath = args(0)
     val outputPath = args(1)
 
+    //Delete output folder to prevent errors
     val path = new File(outputPath)
 
-    if (path.exists()){
+    if (path.exists()) {
       FileUtils.deleteDirectory(path)
     }
 
@@ -39,31 +40,17 @@ object SparkTest {
     val sc = new SparkContext(conf)
     //sc.setLogLevel("ERROR")
 
-//    val inputConf = sc.hadoopConfiguration
-//    //inputConf.setInt("look_ahead_buffer_size", 4096)
-//
-//    val rdd = openShortFASTA(sc, inputPath, inputConf)
-//
-//    val summary = rdd.map(s => "Key: " + s.getKey + "\nSequence: " + s.getValue.substring(0, 70))
-//    summary.saveAsTextFile(outputPath)
+    val inputConf = sc.hadoopConfiguration
+    //inputConf.setInt("look_ahead_buffer_size", 4096)
 
-    //    // Load the text into a Spark RDDln, which is a distributed representation of each line of text
-        val textFile = sc.textFile(inputPath)
+    val rdd = openLongFASTA(sc, inputPath, inputConf)
 
-    val seqs = textFile.flatMap(l => l.split("\n"))
-      .filter(s => s.startsWith(">"))
+    val summary = rdd.map(s => "Key: " + s.getKey
+      + "\nStart: " + s.getStartValue
+      + "\nEnd: " + s.getEndValue
+      + "\nSequence: " + s.getValue.substring(0, 120))
 
-    seqs.saveAsTextFile(outputPath)
-
-    //
-    //    // Nucleotide count
-    //    val counts = textFile.filter(!_.startsWith(">"))
-    //      .flatMap(_.split(""))
-    //      .map(n => (n.toUpperCase(), 1))
-    //      .reduceByKey(_ + _)
-    //
-    //    print(counts)
-    //    counts.saveAsTextFile(outputPath)
+    summary.saveAsTextFile(outputPath)
   }
 
 }
