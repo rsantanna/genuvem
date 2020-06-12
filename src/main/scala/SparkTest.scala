@@ -4,13 +4,12 @@ import org.apache.spark.{SparkConf, SparkContext}
 import fastdoop._
 import org.apache.commons.io.FileUtils
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.Text
 import org.apache.spark.rdd.RDD
 
 object SparkTest {
 
-  def openShortFASTA(sc: SparkContext, inputPath: String, inputConf: Configuration) = {
+  def openShortFASTA(sc: SparkContext, inputPath: String, inputConf: Configuration): RDD[Record] = {
     val rdd = sc.newAPIHadoopFile(inputPath, classOf[FASTAshortInputFileFormat], classOf[Text], classOf[Record], inputConf)
     rdd.values
   }
@@ -34,7 +33,6 @@ object SparkTest {
 
     //Create a SparkContext to initialize Spark
     val conf = new SparkConf()
-      .setMaster("local[*]")
       .setAppName("Genoogle Spark")
 
     val sc = new SparkContext(conf)
