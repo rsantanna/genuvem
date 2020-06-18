@@ -1,14 +1,12 @@
 package domain
 
-import org.apache.log4j.Logger
-import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.util.SizeEstimator
+import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
+import org.apache.spark.storage.StorageLevel
 
 import scala.math.{pow, sqrt}
 
 class LowComplexitySubsequences(subsequenceLength: Int) extends Serializable {
-//  private val logger = Logger.getLogger(LowComplexitySubsequences.getClass)
 
   private val bitsByAlphabetSize = 2
   private var bitsMask = (1 << bitsByAlphabetSize) - 1
@@ -18,11 +16,12 @@ class LowComplexitySubsequences(subsequenceLength: Int) extends Serializable {
 
   private case class Subsequence(encoded: Int, standardDeviation: Double)
 
-  def getLowComplexitySubsequences(sc: SparkContext): Set[Int] = {
+  def getLowComplexitySubsequences(spark: SparkSession): RDD[Int] = {
 
-//    logger.info("Low complexity subsequences set build has started.")
+    import spark.implicits._
 
     val maxSize = pow(alphabetSize, subsequenceLength).toInt
+    val sc = spark.sparkContext
 
     val subSequences = calculateStdDeviation(sc.parallelize(0 until maxSize))
 
@@ -36,11 +35,8 @@ class LowComplexitySubsequences(subsequenceLength: Int) extends Serializable {
 
     val lowComplexitySequences = subSequences
       .filter(v => v.standardDeviation > limit)
-      .map(_.encoded)
-      .collect
-      .toSet
+      .map(v => v.encoded)
 
-//    logger.info(s"Low complexity subsequences set build has generated a set of ${SizeEstimator.estimate(lowComplexitySequences)} bytes.")
     lowComplexitySequences
   }
 
@@ -73,4 +69,16 @@ class LowComplexitySubsequences(subsequenceLength: Int) extends Serializable {
 
 object LowComplexitySubsequences {
   def apply(subsequenceLength: Int): LowComplexitySubsequences = new LowComplexitySubsequences(subsequenceLength)
+
+  def main(args: Array[String]): Unit = {
+    val l = LowComplexitySubsequences(18)
+
+    val spark = SparkSession
+      .builder()
+      .appName("Genoogle | Low Complexity Subsequences Filter")
+      .master("local[*]")
+      .getOrCreate()
+
+    l.getLowComplexitySubsequences(spark)
+  }
 }

@@ -5,13 +5,10 @@ import java.net.URI
 
 import domain.LowComplexitySubsequences
 import org.apache.hadoop.fs.{FileSystem, Path}
-import org.apache.log4j.Logger
-import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, SparkContext}
 
 class FASTAFileLoader(subsequenceLength: Int) extends Serializable {
-  //  private val logger: Logger = Logger.getLogger(classOf[FASTAFileLoader])
-
   private val bitsByAlphabetSize = 2
 
   private case class Subsequence(encoded: Int, standardDeviation: Double)
@@ -61,59 +58,52 @@ class FASTAFileLoader(subsequenceLength: Int) extends Serializable {
     val reader = new BufferedReader(new InputStreamReader(fs.open(inputPath)))
     val writer = fs.create(outputPath)
 
-    try {
-      var line = seekSequenceHeader(reader)
-      val header = line
-      //      logger.info("Processing sequence: " + header)
+    var line = seekSequenceHeader(reader)
 
-      var position = 1
-      var tail: String = null
-      do {
-        line = reader.readLine
+    var position = 1
+    var tail: String = null
+    do {
+      line = reader.readLine
 
-        if (line != null) {
+      if (line != null) {
+        line = line.trim
 
-          line = line.trim
+        if (!line.startsWith(">")) {
+          tail = if (tail == null) line else tail.concat(line)
 
-          if (line.startsWith(">")) {
-            //            logger.info(s"New header at $position: $line")
-          } else {
-            //            logger.debug(line)
+          while (tail.length > subsequenceLength) {
+            val subsequence = tail.substring(0, subsequenceLength)
+            tail = tail.substring(subsequenceLength)
 
-            tail = if (tail == null) line else tail.concat(line)
-
-            while (tail.length > subsequenceLength) {
-              val subsequence = tail.substring(0, subsequenceLength)
-              tail = tail.substring(subsequenceLength)
-
-              writer.writeBytes(s"$position,$subsequence\n")
-              position += 1
-            }
+            writer.writeBytes(s"$position,$subsequence\n")
+            position += 1
           }
         }
-      } while (line != null)
-
-      if (tail != null && !tail.equals("")) {
-        writer.writeBytes(s"$position,$tail\n")
       }
-      //    } catch {
-      //      case e: Throwable => logger.error(s"${e.getClass.getName} has been thrown while reading ${inputPath.getName}: ${e.getMessage}")
-      //    } finally {
-      reader.close()
-      writer.close()
+    } while (line != null)
+
+    if (tail != null && !tail.equals("")) {
+      writer.writeBytes(s"$position,$tail\n")
     }
+    reader.close()
+    writer.close()
   }
 
-  def encodeSequence(sc: SparkContext, inputPath: String, outputPath: String): Unit = {
-    val filter = LowComplexitySubsequences(subsequenceLength).getLowComplexitySubsequences(sc)
-    sc.broadcast(filter)
+  def encodeSequence(spark: SparkSession, inputPath: String, outputPath: String): Unit = {
+    val sc = spark.sparkContext
 
-    val file = sc.textFile(inputPath)
+    val lowComplexitySubsequences = LowComplexitySubsequences(subsequenceLength)
+      .getLowComplexitySubsequences(spark)
+      .collect()
+      .toSet
+
+    val filter = sc.broadcast(lowComplexitySubsequences)
+
+    sc.textFile(inputPath)
       .map(_.split(","))
-      .map(v => (v(0).toInt, encodeSubSequenceToInteger(v(1))))
-      .filter(s => !filter.contains(s._2))
-
-    file.saveAsTextFile(outputPath)
+      .map(v => (encodeSubSequenceToInteger(v(1)), v(0).toInt))
+      .filter(v => filter.value.contains(v._1))
+      .saveAsTextFile(outputPath)
   }
 }
 
@@ -123,14 +113,16 @@ object FASTAFileLoader {
   def main(args: Array[String]): Unit = {
     System.setProperty("HADOOP_USER_NAME", "hduser")
 
-    val sparkConf = new SparkConf()
-      .setMaster("local[*]")
-      .setAppName("Genoogle Spark | Import FASTA")
+    val spark = SparkSession
+      .builder()
+      .master("local[*]")
+      .appName("Genoogle Spark | Import FASTA")
+      .getOrCreate()
 
-    val sc = new SparkContext(sparkConf)
+    val sc = spark.sparkContext
     val fs = FileSystem.get(new URI("hdfs://hadoop-snc:9000"), sc.hadoopConfiguration)
 
-    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/L42023.1.fasta")
+    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/Mus_musculus.GRCm38.dna.alt.fa")
 
     val tokenizedPath = new Path(s"hdfs://hadoop-snc:9000/user/hduser/tokenized/${inputPath.getName}.tks")
     if (fs.exists(tokenizedPath)) {
@@ -144,7 +136,7 @@ object FASTAFileLoader {
 
     val loader = FASTAFileLoader(18)
     loader.tokenizeSequence(fs, inputPath, tokenizedPath)
-    loader.encodeSequence(sc, tokenizedPath.toString, convertedPath.toString)
+    loader.encodeSequence(spark, tokenizedPath.toString, convertedPath.toString)
   }
 
 }
