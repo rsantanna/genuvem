@@ -1,5 +1,6 @@
 package domain
 
+import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 import org.apache.spark.storage.StorageLevel
@@ -16,12 +17,8 @@ class LowComplexitySubsequences(subsequenceLength: Int) extends Serializable {
 
   private case class Subsequence(encoded: Int, standardDeviation: Double)
 
-  def getLowComplexitySubsequences(spark: SparkSession): RDD[Int] = {
-
-    import spark.implicits._
-
+  def getLowComplexitySubsequences(sc: SparkContext): RDD[Int] = {
     val maxSize = pow(alphabetSize, subsequenceLength).toInt
-    val sc = spark.sparkContext
 
     val subSequences = calculateStdDeviation(sc.parallelize(0 until maxSize))
 
@@ -79,6 +76,6 @@ object LowComplexitySubsequences {
       .master("local[*]")
       .getOrCreate()
 
-    l.getLowComplexitySubsequences(spark)
+    l.getLowComplexitySubsequences(spark.sparkContext)
   }
 }
