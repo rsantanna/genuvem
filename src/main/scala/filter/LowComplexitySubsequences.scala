@@ -1,9 +1,8 @@
-package domain
+package filter
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
-import org.apache.spark.storage.StorageLevel
+import org.apache.spark.sql.SparkSession
 
 import scala.math.{pow, sqrt}
 
@@ -58,6 +57,7 @@ class LowComplexitySubsequences(subsequenceLength: Int) extends Serializable {
         case 3 => tc += 1
       }
     }
+
     val m = subsequenceLength / 4.0
     val variance = (pow(ac - m, 2) + pow(cc - m, 2) + pow(gc - m, 2) + pow(tc - m, 2)) / 4.0
     sqrt(variance)
