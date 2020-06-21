@@ -7,3 +7,9 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % "3.0.0-preview2"
 
 // https://mvnrepository.com/artifact/org.apache.spark/spark-sql
 libraryDependencies += "org.apache.spark" %% "spark-sql" % "3.0.0-preview2"
+
+// https://mvnrepository.com/artifact/org.scalatest/scalatest
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.0" % Test
+
+// Buffered output
+logBuffered in Test := false

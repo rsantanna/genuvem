@@ -1,4 +1,4 @@
-package optimization
+package encoder
 
 class DNAEncoder(subsequenceLength: Int) extends Serializable {
   private val DNABitsToSymbolSubstitutionTable: Array[Char] = Array[Char]('A', 'C', 'G', 'T')
@@ -22,9 +22,9 @@ class DNAEncoder(subsequenceLength: Int) extends Serializable {
     encoded
   }
 
-  def decodeIntegerToString(encoded: Int, begin: Int, end: Int): String = {
-    val sb = new StringBuilder((end - begin) + 1)
-    for (pos <- begin to end) {
+  def decodeIntegerToString(encoded: Int, stringLength: Int = subsequenceLength): String = {
+    val sb = new StringBuilder(stringLength)
+    for (pos <- 0 until stringLength) {
       val posInInt = subsequenceLength - pos
       val shift = posInInt * bitsByAlphabetSize
       val value = encoded >> (shift - bitsByAlphabetSize)
@@ -36,4 +36,14 @@ class DNAEncoder(subsequenceLength: Int) extends Serializable {
 
 object DNAEncoder {
   def apply(subsequenceLength: Int): DNAEncoder = new DNAEncoder(subsequenceLength)
+
+  def main(args: Array[String]): Unit = {
+    val encoder = DNAEncoder(11)
+
+    val sequence = "AGCTTTTCATT"
+    val encoded = encoder.encodeSubsequenceToInteger(sequence)
+    val decoded = encoder.decodeIntegerToString(encoded)
+
+    println(s"Sequence: $sequence\nEncoded: $encoded\nDecoded: $decoded")
+  }
 }

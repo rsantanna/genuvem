@@ -3,7 +3,7 @@ package ingestion
 import java.io.{BufferedReader, IOException, InputStreamReader}
 import java.net.URI
 
-import optimization.DNAEncoder
+import encoder.DNAEncoder
 import filter.LowComplexitySubsequences
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
@@ -84,33 +84,42 @@ class FASTAFileLoader(subsequenceLength: Int) extends Serializable {
     writer.close()
   }
 
-  def createFilter(sc: SparkContext): RDD[Int] = {
-    LowComplexitySubsequences(subsequenceLength)
-      .getLowComplexitySubsequences(sc)
+  def readTokens(sc: SparkContext, inputPath: String): RDD[(Int, String)] = sc.textFile(inputPath)
+    .map(s => s.split(","))
+    .map(v => (v(0).toInt, v(1)))
+
+  def createFilter(sc: SparkContext): RDD[Int] = LowComplexitySubsequences(subsequenceLength)
+    .getLowComplexitySubsequences(sc)
+
+  def loadFilter(sc: SparkContext, filterPath: String): Set[Int] = sc.textFile(filterPath)
+    .map(_.toInt)
+    .collect
+    .toSet
+
+  def encode(rdd: RDD[(Int, String)]): RDD[(Int, String, Int)] = rdd
+    .map(v => (v._1, v._2, encoder.encodeSubsequenceToInteger(v._2)))
+
+  def decode(rdd: RDD[(Int, String, Int)]): RDD[(Int, String, Int, String)] = rdd
+    .map(v => (v._1, v._2, v._3, encoder.decodeIntegerToString(v._3)))
+
+  def filterLowComplexity(sc: SparkContext, rdd: RDD[(Int, String, Int)], lookup: Set[Int]): RDD[(Int, String, Int)] = {
+    val filter = sc.broadcast(lookup)
+    rdd.filter(v => !filter.value.contains(v._3))
   }
 
-  def encodeSequence(sc: SparkContext, inputPath: String, filterPath: String): RDD[(Int, Int)] = {
-    val lowComplexitySubsequences = sc.textFile(filterPath)
-      .map(_.toInt)
-      .collect
-      .toSet
+  def reduce(rdd: RDD[(Int, Int)]): RDD[(Int, List[Int])] = rdd
+    .map(v => (v._2, List(v._1)))
+    .reduceByKey(_ ::: _)
 
-    val filter = sc.broadcast(lowComplexitySubsequences)
-
-    sc.textFile(inputPath)
-      .map(_.split(","))
-      .map(v => (v(0).toInt, encoder.encodeSubsequenceToInteger(v(1))))
-      .filter(v => !filter.value.contains(v._2))
-  }
-
-  def indexifySequence(sc: SparkContext, inputPath: String): Unit = {
-    val data = sc.textFile(inputPath)
-      .map(s => s.split(","))
-  }
 }
 
 object FASTAFileLoader {
-  def apply(subSequenceLength: Int): FASTAFileLoader = new FASTAFileLoader(subSequenceLength)
+  def apply(subsequenceLength: Int): FASTAFileLoader = new FASTAFileLoader(subsequenceLength)
+
+  def saveRDD[A](rdd: RDD[A], outputPath: String): RDD[A] = {
+    rdd.saveAsTextFile(outputPath)
+    rdd
+  }
 
   def main(args: Array[String]): Unit = {
     if (System.getProperty("HADOOP_USER_NAME") == null) {
@@ -126,11 +135,12 @@ object FASTAFileLoader {
     val sc = spark.sparkContext
     val fs = FileSystem.get(new URI("hdfs://hadoop-snc:9000"), sc.hadoopConfiguration)
 
-    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/L42023.1.fasta")
+    //    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/L42023.1.fasta")
     //    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/ecoli.nt")
-    //    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/Mus_musculus.GRCm38.dna.alt.fa")
+    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/Mus_musculus.GRCm38.dna.alt.fa")
 
-    val loader = FASTAFileLoader(18)
+    val subsequenceLength = 16
+    val loader = FASTAFileLoader(subsequenceLength)
 
     val tokenizedPath = new Path(s"hdfs://hadoop-snc:9000/user/hduser/tokenized/${inputPath.getName}.tks")
     if (fs.exists(tokenizedPath)) {
@@ -138,7 +148,7 @@ object FASTAFileLoader {
     }
     loader.tokenizeSequence(fs, inputPath, tokenizedPath)
 
-    val filterPath = new Path(s"hdfs://hadoop-snc:9000/user/hduser/filter/filter_18.flt")
+    val filterPath = new Path(s"hdfs://hadoop-snc:9000/user/hduser/filter/filter_$subsequenceLength.flt")
     if (!fs.exists(filterPath)) {
       loader.createFilter(sc)
         .saveAsTextFile(filterPath.toString)
@@ -148,8 +158,15 @@ object FASTAFileLoader {
     if (fs.exists(convertedPath)) {
       fs.delete(convertedPath, true)
     }
-    loader.encodeSequence(spark.sparkContext, tokenizedPath.toString, filterPath.toString)
-      .saveAsTextFile(convertedPath.toString)
+
+    val filterSet = loader.loadFilter(sc, filterPath.toString)
+
+    val tokensRDD = loader.readTokens(sc, tokenizedPath.toString)
+    val converRDD = loader.encode(tokensRDD)
+    val filtered = loader.filterLowComplexity(sc, converRDD, filterSet)
+    val filteredAndDecoded = loader.decode(filtered)
+
+    filteredAndDecoded.saveAsTextFile(convertedPath.toString)
   }
 
 }
