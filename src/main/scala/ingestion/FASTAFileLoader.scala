@@ -86,7 +86,7 @@ class FASTAFileLoader(subsequenceLength: Int) extends Serializable {
 
   def readTokens(sc: SparkContext, inputPath: String): RDD[(Int, String)] = sc.textFile(inputPath)
     .map(s => s.split(","))
-    .map(v => (v(0).toInt, v(1)))
+    .map { case Array(id, sequence) => (id.toInt, sequence) }
 
   def createFilter(sc: SparkContext): RDD[Int] = LowComplexitySubsequences(subsequenceLength)
     .getLowComplexitySubsequences(sc)
@@ -97,20 +97,19 @@ class FASTAFileLoader(subsequenceLength: Int) extends Serializable {
     .toSet
 
   def encode(rdd: RDD[(Int, String)]): RDD[(Int, String, Int)] = rdd
-    .map(v => (v._1, v._2, encoder.encodeSubsequenceToInteger(v._2)))
+    .map { case (position, sequence) => (position, sequence, encoder.encodeSubsequenceToInteger(sequence)) }
 
   def decode(rdd: RDD[(Int, String, Int)]): RDD[(Int, String, Int, String)] = rdd
-    .map(v => (v._1, v._2, v._3, encoder.decodeIntegerToString(v._3)))
+    .map { case (position, sequence, encoded) => (position, sequence, encoded, encoder.decodeIntegerToString(encoded)) }
 
-  def filterLowComplexity(sc: SparkContext, rdd: RDD[(Int, String, Int)], lookup: Set[Int]): RDD[(Int, String, Int)] = {
-    val filter = sc.broadcast(lookup)
-    rdd.filter(v => !filter.value.contains(v._3))
+  def filterLowComplexity(sc: SparkContext, rdd: RDD[(Int, String, Int)], filterSet: Set[Int]): RDD[(Int, String, Int)] = {
+    val lowComplexitySubsequencesFilter = sc.broadcast(filterSet)
+    rdd.filter { case (_, _, encoded) => !lowComplexitySubsequencesFilter.value.contains(encoded) }
   }
 
   def reduce(rdd: RDD[(Int, Int)]): RDD[(Int, List[Int])] = rdd
-    .map(v => (v._2, List(v._1)))
+    .map { case (position, encoded) => (encoded, List(position)) }
     .reduceByKey(_ ::: _)
-
 }
 
 object FASTAFileLoader {
@@ -135,9 +134,9 @@ object FASTAFileLoader {
     val sc = spark.sparkContext
     val fs = FileSystem.get(new URI("hdfs://hadoop-snc:9000"), sc.hadoopConfiguration)
 
-    //    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/L42023.1.fasta")
-    //    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/ecoli.nt")
-    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/Mus_musculus.GRCm38.dna.alt.fa")
+//    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/L42023.1.fasta")
+        val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/ecoli.nt")
+    //    val inputPath = new Path("hdfs://hadoop-snc:9000/user/hduser/fasta/Mus_musculus.GRCm38.dna.alt.fa")
 
     val subsequenceLength = 16
     val loader = FASTAFileLoader(subsequenceLength)
