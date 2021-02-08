@@ -1,7 +1,0 @@
-package index
-
-class IndexBuilder{
-
-
-
-}
