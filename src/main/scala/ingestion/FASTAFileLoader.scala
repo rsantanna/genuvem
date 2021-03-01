@@ -1,11 +1,11 @@
 package ingestion
 
 import java.io.{BufferedReader, IOException, InputStream, InputStreamReader}
-import java.net.URI
 import java.util.zip.GZIPInputStream
+
 import org.apache.hadoop.fs.{FSDataOutputStream, FileSystem, Path}
+import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
 
 
 //noinspection DuplicatedCode
@@ -102,13 +102,10 @@ class FASTAFileLoader(subsequenceLength: Int) extends Serializable {
    * @param inputPath the HDFS path to the file
    * @param workdir   the base directory
    */
-  def load(fs: FileSystem, inputPath: Path, workdir: String): Unit = {
+  def writeTokens(fs: FileSystem, inputPath: Path, workdir: String): Unit = {
     println(s"Reading file $inputPath")
 
     val tokenizedPath = new Path(s"$workdir/tokenized/${inputPath.getName}.tks")
-    if (fs.exists(tokenizedPath)) {
-      fs.delete(tokenizedPath, true)
-    }
 
     val reader = getReader(fs, inputPath)
     val writer = fs.create(tokenizedPath)
@@ -117,6 +114,21 @@ class FASTAFileLoader(subsequenceLength: Int) extends Serializable {
 
     reader.close()
     writer.close()
+  }
+
+  /**
+   * Read the tokens at the specified location returning a RDD of tokenized subsequences
+   * as tuples containing the sequence header, the token position within the sequence
+   * and the subsequence itself
+   *
+   * @param sc
+   * @param inputPath
+   * @return
+   */
+  def readTokens(sc: SparkContext, inputPath: String): RDD[(String, Int, String)] = {
+    sc.textFile(inputPath)
+      .map(x => x.split("\t"))
+      .map(x => (x(0), x(1).toInt, x(2)))
   }
 }
 

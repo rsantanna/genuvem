@@ -66,16 +66,4 @@ class LowComplexitySubsequences(subsequenceLength: Int) extends Serializable {
 
 object LowComplexitySubsequences {
   def apply(subsequenceLength: Int): LowComplexitySubsequences = new LowComplexitySubsequences(subsequenceLength)
-
-  def main(args: Array[String]): Unit = {
-    val l = LowComplexitySubsequences(18)
-
-    val spark = SparkSession
-      .builder()
-      .appName("Genoogle | Low Complexity Subsequences Filter")
-      .master("local[*]")
-      .getOrCreate()
-
-    l.getLowComplexitySubsequences(spark.sparkContext)
-  }
 }

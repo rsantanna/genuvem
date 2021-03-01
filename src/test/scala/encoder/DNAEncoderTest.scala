@@ -4,7 +4,7 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class DNAEncoderTest extends AnyFunSuite {
 
-  test("Encode DNA Subsequence") {
+  test("Encode DNA Subsequence | Length 8") {
     val encoder = DNAEncoder(8)
 
     assert(encoder.encodeSubsequenceToInteger("TCGGACTG") === 55838)
@@ -17,7 +17,7 @@ class DNAEncoderTest extends AnyFunSuite {
     assert(encoder.encodeSubsequenceToInteger("TCTAGCCA") === 56468)
   }
 
-  test("Decode DNA Subsequence") {
+  test("Decode DNA Subsequence | Length 8") {
     val encoder = DNAEncoder(8)
 
     assert("TCGGACTG" === encoder.decodeIntegerToString(55838))
@@ -29,4 +29,19 @@ class DNAEncoderTest extends AnyFunSuite {
     assert("ATTTTTTT" === encoder.decodeIntegerToString(16383))
     assert("TCTAGCCA" === encoder.decodeIntegerToString(56468))
   }
+
+  test("Encode DNA Subsequence | Length 11") {
+    val encoder = DNAEncoder(11)
+    assert(encoder.encodeSubsequenceToInteger("ATTKTGAACGG") == 997402)
+    assert(encoder.encodeSubsequenceToInteger("TATGGCAATTA") == 3384380)
+
+  }
+
+  test("Decode DNA Subsequence | Length 11") {
+    val encoder = DNAEncoder(11)
+    assert("ATTATGAACGG" === encoder.decodeIntegerToString(997402))
+    assert("TATGGCAATTA" === encoder.decodeIntegerToString(3384380))
+  }
+
+
 }
