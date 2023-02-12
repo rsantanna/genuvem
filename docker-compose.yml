@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  genoogle:
+    build:
+      context: docker/genoogle
+      dockerfile: Dockerfile
+    profiles:
+      - donotstart
+    image: raphaelsantanna/genoogle:latest
+    container_name: genoogle
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./resources/fasta:/app/genoogle/files/fasta
+      - ./resources/conf:/app/genoogle/conf
+      - ./resources/queries:/app/genoogle/queries
+  hadoop-snc:
+    build:
+      context: docker/hadoop-snc
+      dockerfile: Dockerfile
+      args:
+        HADOOP_VERSION: 3.3.1
+        SPARK_VERSION: 3.3.4
+        ZEPPELIN_VERSION: 0.10.1
+        SCALA_VERSION: 2.12.17
+    image: raphaelsantanna/hadoop-snc:latest
+    container_name: hadoop-snc
+    hostname: hadoop-snc
+    stdin_open: true
+    tty: true
+    ports:
+      - "4040:4040"
+      - "8080:8080"
+      - "8088:8088"
+      - "8042:8042"
+      - "50070:50070"    
+    volumes:
+      - ./resources/fasta:/app/genoogle/files/fasta
+      - ./resources/conf:/app/genoogle/conf
+      - ./resources/queries:/app/genoogle/queries
+      - ./resources/notebook:/usr/local/zeppelin/notebook
