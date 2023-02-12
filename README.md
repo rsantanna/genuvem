@@ -10,30 +10,39 @@ Check the page [Reference Guidelines](docs/references.md) if you're writing abou
 
 ## Local Environment
 
-Please refer to [Local Environment](docs/environment.md) for instructions to run Genoogle and simulate a Hadoop Single Node Cluster.
+Please refer to [Local Environment](docs/environment.md) for instructions to run Genoogle and simulate a Hadoop Single
+Node Cluster.
 
 ## Prerequisites
 
 This project depends on [Google Cloud CLI](https://cloud.google.com/sdk/docs/install).
-Please, install it and setup your GCP credentials.
-
-You must add the encoded databanks to the `resources/files/fasta/` folder and update the configuration
-file `resources/files/conf/genoogle.xml` accordingly. Please, refer to the Genoogle project page for details on how to
-encode FASTA files and tweak the configuration parameters.
+Please, install it and set up your GCP credentials.
+It is recommended creating a [service account](https://cloud.google.com/iam/docs/service-accounts) specific to this
+project.
 
 Make sure your default subnet has access to the internet and other Google Cloud services.
 You can enable a Cloud NAT using the default configurations if your subnet is not configured yet.
 
+Please, refer to the [Genoogle](https://github.com/felipealbrecht/Genoogle) project page for details on how to
+add and encode FASTA files, and how to tweak the configuration parameters.
+
 ## Setup
 
-Once your GCP credentials are correctly set up, you can run the setup script located in the `scripts/` folder.
+Once your GCP credentials are correctly set up, create a file named `.env` on the root directory of this project and
+the following line:
+
+```shell
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
+```
+
+Now, you can run the setup script located in the `scripts/` folder.
+
+**Disclaimer:** This script will create the necessary buckets if they don't exist and sync the resources folder with the
+resources bucket, which can incur in costs.
 
 ```bash
 ./resources/scripts/setup.sh
 ```
-
-This script will create the necessary buckets if they don't exist and sync the resources folder with the resources
-bucket.
 
 ## Create a Dataproc Cluster
 
@@ -89,7 +98,8 @@ gcloud dataproc jobs submit spark \
 input parameters, a table with search results and a simple interface showing the selected alignment.
 ](docs/images/zeppelin.png "Genuvem on Zeppelin")
 
-The Dataproc cluster comes with a [Zeppelin](https://zeppelin.apache.org/) server ready to use. Zeppelin provides an interactive
+The Dataproc cluster comes with a [Zeppelin](https://zeppelin.apache.org/) server ready to use. Zeppelin provides an
+interactive
 notebook environment, similar to [Jupyter](https://jupyter.org/), which can be used to easily develop and execute Spark
 scripts.
 
