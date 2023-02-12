@@ -29,7 +29,7 @@ You can enable a Cloud NAT using the default configurations if your subnet is no
 Once your GCP credentials are correctly set up, you can run the setup script located in the `scripts/` folder.
 
 ```bash
-./scripts/setup.sh
+./resources/scripts/setup.sh
 ```
 
 This script will create the necessary buckets if they don't exist and sync the resources folder with the resources
@@ -41,13 +41,13 @@ You can use the script `scripts/create_cluster.sh` passing the number of worker 
 Dataproc Cluster ready to run Genuvem:
 
 ```bash
-./scripts/create_cluster.sh <node count>
+./resources/scripts/create_cluster.sh <node count>
 ```
 
 Example for an 8-node cluster:
 
 ```bash
-./scripts/create_cluster.sh 8
+./resources/scripts/create_cluster.sh 8
 ```
 
 ## Submit Job

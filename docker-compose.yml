@@ -19,8 +19,8 @@ services:
       context: docker/hadoop-snc
       dockerfile: Dockerfile
       args:
-        HADOOP_VERSION: 3.3.1
-        SPARK_VERSION: 3.3.4
+        HADOOP_VERSION: 3.3.4
+        SPARK_VERSION: 3.3.1
         ZEPPELIN_VERSION: 0.10.1
         SCALA_VERSION: 2.12.17
     image: raphaelsantanna/hadoop-snc:latest
