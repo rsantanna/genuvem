@@ -42,7 +42,7 @@ build/
 !/resources/queries/sars-cov-2-2022-*
 /resources/fasta/*
 !/resources/fasta/sars-cov-2/*
-notebook/*
+/notebook/*
 
 # Scala
 out
