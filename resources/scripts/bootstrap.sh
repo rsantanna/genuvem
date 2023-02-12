@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
+source ./genuvem-env.sh
 
 echo "Setting environment variables..."
-export GENUVEM_RESOURCES_BUCKET=genuvem-resources
 export GENOOGLE_HOME="/app/genoogle"
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 export PATH=$PATH:$JAVA_HOME/bin
@@ -16,8 +16,8 @@ java -version
 echo "Successfully installed custom packages."
 
 echo "Installing Genoogle at $GENOOGLE_HOME..."
-mkdir -p $GENOOGLE_HOME
-cd $GENOOGLE_HOME || exit
+mkdir -p "$GENOOGLE_HOME"
+cd "$GENOOGLE_HOME" || exit
 git clone https://github.com/rsantanna/Genoogle.git .
 ant jar
 mv ./ant-build/genoogle.jar .
@@ -25,22 +25,22 @@ mv ./ant-build/genoogle.jar .
 echo "Downloading Genoogle configs and files..."
 rm -r ./conf
 
-gsutil -m cp -r gs://$GENUVEM_RESOURCES_BUCKET/conf .
-gsutil -m cp -r gs://$GENUVEM_RESOURCES_BUCKET/queries .
-gsutil -m cp -r gs://$GENUVEM_RESOURCES_BUCKET/files .
+gsutil -m cp -r "gs://$RESOURCES_BUCKET/conf" .
+gsutil -m cp -r "gs://$RESOURCES_BUCKET/fasta" .
+gsutil -m cp -r "gs://$RESOURCES_BUCKET/queries" .
 
 echo "Downloading Genoogle scripts..."
-gsutil cp gs://$GENUVEM_RESOURCES_BUCKET/scripts/run_genoogle.sh .
+gsutil cp "gs://$RESOURCES_BUCKET/scripts/run_genoogle.sh" .
 sed -i -e 's/\r$//' run_genoogle.sh # fix for line-ending characters
 chmod +x run_genoogle.sh
 
 echo "Setting permissions..."
 groupadd genoogle
 for ID in $(cat /etc/passwd | cut -d ':' -f1); do
-  (adduser $ID genoogle)
+  (adduser "$ID" genoogle)
 done
 
-chgrp -R genoogle $GENOOGLE_HOME
-chmod -R 777 $GENOOGLE_HOME
+chgrp -R genoogle "$GENOOGLE_HOME"
+chmod -R 777 "$GENOOGLE_HOME"
 
 echo "Successfully installed Genoogle."

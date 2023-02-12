@@ -6,7 +6,11 @@ on [SparkBLAST](https://github.com/sparkblastproject/v2).
 Genoogle is software for similar DNA sequences searching developed by Felipe Albrecht: please refer to
 the [original repository](https://github.com/felipealbrecht/Genoogle) for more information about the software.
 
-Check the page [Reference Guidelines](./docs/cite_this_project.md) if you're writing about those.
+Check the page [Reference Guidelines](docs/references.md) if you're writing about those.
+
+## Local Environment
+
+Please refer to [Local Environment](docs/environment.md) for instructions to run Genoogle and simulate a Hadoop Single Node Cluster.
 
 ## Prerequisites
 

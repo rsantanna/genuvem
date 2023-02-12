@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Genoogle: Similar DNA Sequences Searching Engine and Tools. (http://genoogle.pih.bio.br) -->
+<!-- Copyright (C) 2008,2009  Felipe Fernandes Albrecht (felipe.albrecht@gmail.com)           -->
+<!--                                                                                          -->
+<!-- For further information check the LICENSE file.                                          -->
+
+<genoogle:conf xmlns:genoogle="http://genoogle.pih.bio.br">
+
+    <genoogle:search-manager>
+        <genoogle:max-simultaneous-searchs value="2"/>
+    </genoogle:search-manager>
+
+    <genoogle:score>
+        <genoogle:match value="1"/>
+        <genoogle:mismatch value="-3"/>
+    </genoogle:score>
+
+    <genoogle:search-parameters>
+        <genoogle:max-sub-sequence-distance value="30"/>
+        <genoogle:min-hsp-length value="11"/>
+        <genoogle:extend-dropoff value="5"/>
+        <genoogle:max-hits-results value="50"/>
+        <genoogle:max-threads-index-search value="2"/>
+        <genoogle:max-threads-extend-align value="2"/>
+        <genoogle:min-query-slice-length value="1000"/>
+        <genoogle:query-split-quantity value="1"/>
+    </genoogle:search-parameters>
+
+    <genoogle:databanks>
+        <genoogle:split-databanks name="sars-cov-2" path="files/fasta" mask="111010010100110111"
+                                  number-of-sub-databanks="1" sub-sequence-length="11" low-complexity-filter="5">
+            <genoogle:databank name="sars-cov-2" path="sars-cov-2.fasta"/>
+        </genoogle:split-databanks>
+    </genoogle:databanks>
+
+</genoogle:conf>

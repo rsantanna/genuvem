@@ -9,7 +9,7 @@ object Genuvem {
 
     // Pipeline parameters
     val databank = args(0) // example: "sars-cov-2-2021"
-    val queryFile =  args(1) // example: "sars-cov-1-query.fasta"
+    val queryFile = args(1) // example: "sars-cov-1-query.fasta"
 
     val queryPath = "file:///app/genoogle/queries/exp2/" + queryFile
     val scriptPath = "/app/genoogle/run_genoogle.sh"
