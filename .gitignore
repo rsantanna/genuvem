@@ -39,9 +39,10 @@ build/
 
 # Genoogle
 /resources/queries/*
+!/resources/queries/sars-cov-2-2022-*
 /resources/fasta/*
 !/resources/fasta/sars-cov-2
-!/resources/genoogle/queries/.gitkeep
+/resources/notebook/
 
 # Scala
 out
