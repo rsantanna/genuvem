@@ -45,19 +45,42 @@ Example for an 8-node cluster:
 
 ## Submit Job
 
-You can submit a job by calling `scripts/submit_genuvem.sh` and passing the cluster name as parameter. The script
-will query the cluster metadata to find the optimal number of executors for your Spark job.
+For an optimal experience, it is recommended to run Genoogle on large executors. The command below shows how to submit a
+Genuvem search on a cluster with 4 nodes and 2 CPUs, 16 GB of memory at each node.
 
 ```bash
-./scripts/submit_genuvem.sh <cluster name>
+spark-submit \
+    --master yarn \
+    --num-executors 4 \
+    --driver-memory 12g \
+    --executor-memory 12g \
+    --executor-cores 2 \
+    --conf spark.task.cpus=2 \
+    --class Genuvem \
+    genuvem.jar \
+    sars-cov-2-2021 \
+    sars-cov-1.fasta
 ```
 
-Example:
+Or you can submit a Dataproc job from your local machine:
+
 ```bash
-./scripts/submit_genuvem.sh my-dataproc-cluster
+gcloud dataproc jobs submit spark \
+    --class Genuvem \
+    --jars genuvem.jar \
+    --cluster genuvem-cluster \
+    --region us-central1 \
+    --properties "spark.executor.instances=4,spark.executor.cores=2,spark.task.cpus=2,spark.executor.memory=12g,spark.driver.memory=12g" \
+    -- \
+    sars-cov-2-2021 \
+    sars-cov-1.fasta
 ```
 
 ## Interactive Environment
+
+![This image shows Genuvem running on Zeppelin. The screen is divided in three parts: a form for entering Genoogle's
+input parameters, a table with search results and a simple interface showing the selected alignment.
+](docs/images/zeppelin.png "Genuvem on Zeppelin")
 
 The cluster comes with a [Zeppelin](https://zeppelin.apache.org/) server ready to use. Zeppelin provides an interactive
 notebook environment, similar to [Jupyter](https://jupyter.org/), which can be used to easily develop and execute Spark
