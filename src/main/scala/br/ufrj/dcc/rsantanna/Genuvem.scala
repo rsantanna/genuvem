@@ -1,12 +1,15 @@
+package br.ufrj.dcc.rsantanna
+
 import org.apache.spark.sql.SparkSession
+
 import java.util.UUID.randomUUID
 
 object Genuvem {
   def main(args: Array[String]): Unit = {
 
     // Pipeline parameters
-    val databank = args(0) // "sars-cov-2-2021"
-    val queryFile =  args(1) // "/search/sars-cov-1-query.fasta"
+    val databank = args(0) // example: "sars-cov-2-2021"
+    val queryFile =  args(1) // example: "sars-cov-1-query.fasta"
 
     val queryPath = "file:///app/genoogle/queries/exp2/" + queryFile
     val scriptPath = "/app/genoogle/run_genoogle.sh"
@@ -43,6 +46,6 @@ object Genuvem {
     val outputFiles = rdd.pipe(runArgs, envs).collect
 
     println(s"Run $runId finished successfully. HDFS output files:")
-    outputFiles.map(println)
+    outputFiles.foreach(println)
   }
 }

@@ -1,9 +1,12 @@
 # Genuvem
 
-Genuvem is a wrapper for executing Genoogle on cloud based on [SparkBLAST](https://github.com/sparkblastproject/v2).
+Genuvem is a platform for executing [Genoogle](https://github.com/felipealbrecht/Genoogle) in a cloud environment based
+on [SparkBLAST](https://github.com/sparkblastproject/v2).
 
 Genoogle is software for similar DNA sequences searching developed by Felipe Albrecht: please refer to
 the [original repository](https://github.com/felipealbrecht/Genoogle) for more information about the software.
+
+Check the page [Reference Guidelines](./docs/cite_this_project.md) if you're writing about those.
 
 ## Prerequisites
 
@@ -82,7 +85,7 @@ gcloud dataproc jobs submit spark \
 input parameters, a table with search results and a simple interface showing the selected alignment.
 ](docs/images/zeppelin.png "Genuvem on Zeppelin")
 
-The cluster comes with a [Zeppelin](https://zeppelin.apache.org/) server ready to use. Zeppelin provides an interactive
+The Dataproc cluster comes with a [Zeppelin](https://zeppelin.apache.org/) server ready to use. Zeppelin provides an interactive
 notebook environment, similar to [Jupyter](https://jupyter.org/), which can be used to easily develop and execute Spark
 scripts.
 
@@ -92,3 +95,9 @@ contains a Spark script to execute and visualize the query results, and also vis
 The Zeppelin web interface is available from the Dataproc cluster console.
 Just open the Cluster Details and click on the Web Interfaces tab. Zeppelin should be the last link in the Component
 Gateway list.
+
+## Cite this project! ❤️
+
+When writing about this project, please refer to:
+
+

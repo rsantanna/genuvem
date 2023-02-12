@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: Genuvem
+Main-Class: br.ufrj.dcc.rsantanna.Genuvem
 

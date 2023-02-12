@@ -38,10 +38,10 @@ build/
 .DS_Store
 
 # Genoogle
-/resources/queries/*
-/resources/files/fasta/*
-!/resources/files/fasta/.gitkeep
-!/resources/files/queries/.gitkeep
+#/resources/queries/*
+#/resources/files/fasta/*
+#!/resources/files/fasta/.gitkeep
+#!/resources/files/queries/.gitkeep
 
 # Scala
 out
