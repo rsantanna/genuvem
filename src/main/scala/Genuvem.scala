@@ -7,7 +7,6 @@ object Genuvem {
     // Pipeline parameters
     val databank = args(0) // "sars-cov-2-2021"
     val queryFile =  args(1) // "/search/sars-cov-1-query.fasta"
-    val nodeCount = args(2).toInt
 
     val queryPath = "file:///app/genoogle/queries/exp2/" + queryFile
     val scriptPath = "/app/genoogle/run_genoogle.sh"
@@ -20,6 +19,8 @@ object Genuvem {
       .getOrCreate
 
     val sc = spark.sparkContext
+    val nodeCount = sc.getConf.getInt("spark.executor.instances", 1)
+    println(s"nodeCount is $nodeCount")
 
     // Generate unique id and build the args array
     val runId = randomUUID.toString
