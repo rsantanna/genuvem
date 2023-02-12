@@ -38,10 +38,10 @@ build/
 .DS_Store
 
 # Genoogle
-/resources/queries/*
-!/resources/queries/sars-cov-2-2022-*
-/resources/fasta/*
-!/resources/fasta/sars-cov-2/*
+/docker/genoogle/queries/*
+!/docker/genoogle/queries/sars-cov-2-2022-*
+/docker/genoogle/fasta/*
+!/docker/genoogle/fasta/sars-cov-2/*
 /notebook/*
 
 # Scala
@@ -50,3 +50,5 @@ target
 .bsp
 /.idea/
 /project/
+/notebook/
+/docker/hadoop-snc/notebook/IDEA_Plugin/

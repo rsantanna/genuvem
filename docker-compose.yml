@@ -11,9 +11,9 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./resources/fasta:/app/genoogle/files/fasta
-      - ./resources/conf:/app/genoogle/conf
-      - ./resources/queries:/app/genoogle/queries
+      - ./docker/genoogle/fasta:/app/genoogle/files/fasta
+      - ./docker/genoogle/conf:/app/genoogle/conf
+      - ./docker/genoogle/queries:/app/genoogle/queries
   hadoop-snc:
     build:
       context: docker/hadoop-snc
@@ -33,9 +33,9 @@ services:
       - "8080:8080"
       - "8088:8088"
       - "8042:8042"
-      - "50070:50070"    
+      - "50070:50070"
     volumes:
-      - ./resources/fasta:/app/genoogle/files/fasta
-      - ./resources/conf:/app/genoogle/conf
-      - ./resources/queries:/app/genoogle/queries
-      - ./resources/notebook:/usr/local/zeppelin/notebook
+      - ./docker/genoogle/fasta:/app/genoogle/files/fasta
+      - ./docker/genoogle/conf:/app/genoogle/conf
+      - ./docker/genoogle/queries:/app/genoogle/queries
+      - ./docker/hadoop-snc/notebook:/usr/local/zeppelin/notebook
