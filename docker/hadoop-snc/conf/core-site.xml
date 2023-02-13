@@ -45,7 +45,7 @@
   </property>
   <property>
     <name>google.cloud.auth.service.account.json.keyfile</name>
-    <value>/path/to/keyfile</value>
+    <value>${GOOGLE_APPLICATION_CREDENTIALS}</value>
     <description>
       The JSON key file of the service account used for GCS
       access when google.cloud.auth.service.account.enable is true.

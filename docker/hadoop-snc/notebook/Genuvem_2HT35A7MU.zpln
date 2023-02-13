@@ -4,7 +4,7 @@
       "title": "Configurações do Spark",
       "text": "%spark.conf\nspark.app.name                             Genuvem\nspark.submit.deployMode                    client\nspark.executor.instances                   1\nspark.executor.cores                       2\nspark.task.cpus                            2\nspark.executor.memory                      6g\nspark.driver.memory                        6g\nspark.jars.packages\t                       com.databricks:spark-xml_2.12:0.14.0\nzeppelin.spark.printREPLOutput             true\nzeppelin.spark.enableSupportedVersionCheck false",
       "user": "anonymous",
-      "dateUpdated": "2023-02-12 19:54:28.128",
+      "dateUpdated": "2023-02-13 00:45:22.830",
       "progress": 0,
       "config": {
         "tableHide": false,
@@ -26,14 +26,18 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
       "apps": [],
       "runtimeInfos": {},
       "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1676207379796_422217362",
       "id": "paragraph_1643498931975_713411929",
       "dateCreated": "2023-02-12 13:09:39.796",
-      "dateStarted": "2023-02-12 19:54:28.178",
-      "dateFinished": "2023-02-12 19:54:28.240",
+      "dateStarted": "2023-02-13 00:45:22.968",
+      "dateFinished": "2023-02-13 00:45:23.120",
       "status": "FINISHED"
     },
     {
