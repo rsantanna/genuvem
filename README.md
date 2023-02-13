@@ -103,9 +103,3 @@ contains a Spark script to execute and visualize the query results, and also vis
 The Zeppelin web interface is available from the Dataproc cluster console.
 Just open the Cluster Details and click on the Web Interfaces tab. Zeppelin should be the last link in the Component
 Gateway list.
-
-## Cite this project! ❤️
-
-When writing about this project, please refer to:
-
-
