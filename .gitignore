@@ -43,8 +43,8 @@ build/
 !/files/queries/sars-cov-2-2022-*
 /files/databanks/*
 !/files/databanks/sars-cov-2/*
-#notebook/*
-#!notebook/Genuvem*
+notebook/*
+!notebook/Genuvem*
 
 # Scala
 out
