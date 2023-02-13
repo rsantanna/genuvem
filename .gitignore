@@ -43,7 +43,8 @@ build/
 !/files/queries/sars-cov-2-2022-*
 /files/databanks/*
 !/files/databanks/sars-cov-2/*
-notebook/*
+#notebook/*
+#!notebook/Genuvem*
 
 # Scala
 out
@@ -51,5 +52,3 @@ target
 .bsp
 /.idea/
 /project/
-/notebook/
-/notebook/IDEA_Plugin/
