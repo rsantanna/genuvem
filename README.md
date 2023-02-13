@@ -25,10 +25,6 @@ Please, refer to the [Genoogle](https://github.com/felipealbrecht/Genoogle) proj
 add and encode FASTA files, and how to tweak the configuration parameters.
 
 ## Setup
-
-
-
-
 Now, you can run the setup script located in the `scripts/` folder.
 
 **Disclaimer:** This script will create the necessary buckets if they don't exist and sync the resources folder with the
@@ -76,14 +72,14 @@ Or you can submit a Dataproc job from your local machine:
 
 ```bash
 gcloud dataproc jobs submit spark \
-    --class Genuvem \
-    --jars genuvem.jar \
-    --cluster genuvem-cluster \
-    --region us-central1 \
-    --properties "spark.executor.instances=4,spark.executor.cores=2,spark.task.cpus=2,spark.executor.memory=12g,spark.driver.memory=12g" \
-    -- \
-    sars-cov-2-2021 \
-    sars-cov-1.fasta
+  --cluster genuvem-cluster-2 \
+  --region us-central1 \
+  --properties "spark.executor.instances=2,spark.executor.cores=2,spark.task.cpus=2,spark.executor.memory=12g,spark.driver.memory=12g" \
+  --jar genuvem.jar \
+  -- \
+  sars-cov-2-2021 \
+  sars-cov-2-2022-4.fasta
+
 ```
 
 ## Interactive Environment
@@ -97,7 +93,7 @@ interactive
 notebook environment, similar to [Jupyter](https://jupyter.org/), which can be used to easily develop and execute Spark
 scripts.
 
-You can find a Zeppelin notebook in the `notebooks/` folder, which can be imported into the cluster. This notebook
+You can find a Zeppelin notebook in the `notebook/` folder, which can be imported into the cluster. This notebook
 contains a Spark script to execute and visualize the query results, and also visualize the actual alignments.
 
 The Zeppelin web interface is available from the Dataproc cluster console.

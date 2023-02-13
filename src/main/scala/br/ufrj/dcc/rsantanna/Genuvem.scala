@@ -6,12 +6,11 @@ import java.util.UUID.randomUUID
 
 object Genuvem {
   def main(args: Array[String]): Unit = {
-
     // Pipeline parameters
     val databank = args(0) // example: "sars-cov-2-2021"
     val queryFile = args(1) // example: "sars-cov-1-query.fasta"
 
-    val queryPath = "file:///app/genoogle/queries/exp2/" + queryFile
+    val queryPath = "file:///app/genoogle/queries/" + queryFile
     val scriptPath = "/app/genoogle/run_genoogle.sh"
 
     // Initialize Session

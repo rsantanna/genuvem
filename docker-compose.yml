@@ -46,7 +46,7 @@ services:
       - ./files/databanks:/app/genoogle/databanks
       - ./files/queries:/app/genoogle/queries
       - ./scripts/run_genoogle.sh:/app/genoogle/run_genoogle.sh
-      - ./docker/hadoop-snc/notebook:/usr/local/zeppelin/notebook
+      - ./notebook:/usr/local/zeppelin/notebook
       - type: bind
         source: ${GOOGLE_APPLICATION_CREDENTIALS}
         target: *credentials-path
