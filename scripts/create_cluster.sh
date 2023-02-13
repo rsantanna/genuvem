@@ -20,6 +20,6 @@ gcloud dataproc clusters create "${CLUSTER_ID}" \
   --image-version 2.0-ubuntu18 \
   --optional-components ZEPPELIN,JUPYTER \
   --enable-component-gateway \
-  --properties "zeppelin-env:GENOOGLE_HOME=/app/genoogle,spark-env:GENOOGLE_HOME=/app/genoogle,hadoop-env:GENOOGLE_HOME=/app/genoogle,yarn-site:yarn.webapp.ui2.enable=true" \
+  --properties "zeppelin-env:GENOOGLE_HOME=/app/genoogle,spark-env:GENOOGLE_HOME=/app/genoogle,hadoop-env:GENOOGLE_HOME=/app/genoogle,yarn:yarn.webapp.ui2.enable=true" \
   --initialization-actions "gs://${RESOURCES_BUCKET}/scripts/bootstrap.sh" \
   --metadata "resources_bucket=${RESOURCES_BUCKET}"
