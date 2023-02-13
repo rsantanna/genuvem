@@ -17,8 +17,6 @@ Node Cluster.
 
 This project depends on [Google Cloud CLI](https://cloud.google.com/sdk/docs/install).
 Please, install it and set up your GCP credentials.
-It is recommended creating a [service account](https://cloud.google.com/iam/docs/service-accounts) specific to this
-project.
 
 Make sure your default subnet has access to the internet and other Google Cloud services.
 You can enable a Cloud NAT using the default configurations if your subnet is not configured yet.
@@ -28,12 +26,8 @@ add and encode FASTA files, and how to tweak the configuration parameters.
 
 ## Setup
 
-Once your GCP credentials are correctly set up, create a file named `.env` on the root directory of this project and
-the following line:
 
-```shell
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
-```
+
 
 Now, you can run the setup script located in the `scripts/` folder.
 

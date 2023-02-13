@@ -14,9 +14,9 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./docker/genoogle/fasta:/app/genoogle/files/fasta
-      - ./docker/genoogle/conf:/app/genoogle/conf
-      - ./docker/genoogle/queries:/app/genoogle/queries
+      - ./conf:/app/genoogle/conf
+      - ./files/databanks:/app/genoogle/databanks
+      - ./files/queries:/app/genoogle/queries
   hadoop-snc:
     env_file: .env
     build:
@@ -42,9 +42,10 @@ services:
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: *credentials-path
     volumes:
-      - ./docker/genoogle/fasta:/app/genoogle/files/fasta
-      - ./docker/genoogle/conf:/app/genoogle/conf
-      - ./docker/genoogle/queries:/app/genoogle/queries
+      - ./conf:/app/genoogle/conf
+      - ./files/databanks:/app/genoogle/databanks
+      - ./files/queries:/app/genoogle/queries
+      - ./scripts/run_genoogle.sh:/app/genoogle/run_genoogle.sh
       - ./docker/hadoop-snc/notebook:/usr/local/zeppelin/notebook
       - type: bind
         source: ${GOOGLE_APPLICATION_CREDENTIALS}

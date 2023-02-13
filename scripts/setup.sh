@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ./genuvem-env.sh
+. ./conf/genuvem-env.sh
 
 # Create Buckets
 if ! gsutil ls "gs://$RESOURCES_BUCKET" > /dev/null 2>&1; then
@@ -22,4 +22,7 @@ fi
 
 # Sync files
 echo "Syncing resources..."
-gsutil rsync -r resources "gs://$RESOURCES_BUCKET/"
+gsutil rsync -r -x "files/databanks/*.fasta$" files/databanks "gs://$RESOURCES_BUCKET/databanks"
+gsutil rsync -r files/queries "gs://$RESOURCES_BUCKET/queries"
+gsutil rsync -r conf "gs://$RESOURCES_BUCKET/conf"
+gsutil rsync -r scripts "gs://$RESOURCES_BUCKET/scripts"

@@ -28,9 +28,20 @@
     </genoogle:search-parameters>
 
     <genoogle:databanks>
-        <genoogle:split-databanks name="sars-cov-2" path="files/fasta" mask="111010010100110111"
+        <genoogle:split-databanks name="sars-cov-2-2021" path="databanks" mask="111010010100110111"
                                   number-of-sub-databanks="1" sub-sequence-length="11" low-complexity-filter="5">
-            <genoogle:databank name="sars-cov-2" path="sars-cov-2.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-01" path="sars-cov-2-2021-01.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-02" path="sars-cov-2-2021-02.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-03" path="sars-cov-2-2021-03.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-04" path="sars-cov-2-2021-04.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-05" path="sars-cov-2-2021-05.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-06" path="sars-cov-2-2021-06.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-07" path="sars-cov-2-2021-07.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-08" path="sars-cov-2-2021-08.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-09" path="sars-cov-2-2021-09.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-10" path="sars-cov-2-2021-10.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-11" path="sars-cov-2-2021-11.fasta"/>
+            <genoogle:databank name="sars-cov-2-2021-12" path="sars-cov-2-2021-12.fasta"/>
         </genoogle:split-databanks>
     </genoogle:databanks>
 

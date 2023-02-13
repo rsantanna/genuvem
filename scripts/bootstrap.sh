@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source ./genuvem-env.sh
+
+RESOURCES_BUCKET=$(/usr/share/google/get_metadata_value attributes/resources_bucket)
 
 echo "Setting environment variables..."
 export GENOOGLE_HOME="/app/genoogle"
@@ -26,7 +27,7 @@ echo "Downloading Genoogle configs and files..."
 rm -r ./conf
 
 gsutil -m cp -r "gs://$RESOURCES_BUCKET/conf" .
-gsutil -m cp -r "gs://$RESOURCES_BUCKET/fasta" .
+gsutil -m cp -r "gs://$RESOURCES_BUCKET/databanks" .
 gsutil -m cp -r "gs://$RESOURCES_BUCKET/queries" .
 
 echo "Downloading Genoogle scripts..."

@@ -60,7 +60,7 @@ echo -e "$GENOOGLE_CMD" >"$BATCH_FILE"
 true >"$QUERY_FILE"
 
 # Append lines from the input to the existing query file
-while read LINE; do
+while read -r LINE; do
   echo "${LINE}" >>"$QUERY_FILE"
 done
 
