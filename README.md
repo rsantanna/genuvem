@@ -7,6 +7,7 @@ Genoogle is software for similar DNA sequences searching developed by Felipe Alb
 the [original repository](https://github.com/felipealbrecht/Genoogle) for more information about the software.
 
 Check the page [Reference Guidelines](docs/references.md) if you're writing about those.
+The experiment results are available as [CSV](docs/medicoes.csv).
 
 ## Local Environment
 
