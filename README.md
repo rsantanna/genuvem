@@ -105,6 +105,6 @@ Gateway list.
 ## Legacy
 
 This repository keeps the history of initial iterations in the following read-only branches:
-- [v1-hadoop](tree/v1-hadoop): used for an initial assessment of Hadoop MapReduce and the Fastdoop library.
-- [v2-genlastic](tree/v2-genlastic): intended to reimplement Genoogle on Spark, it has a fully-functional FASTA
+- [v1-hadoop](../../tree/v1-hadoop): used for an initial assessment of Hadoop MapReduce and the Fastdoop library.
+- [v2-genlastic](../../tree/v2-genlastic): intended to reimplement Genoogle on Spark, it has a fully-functional FASTA
   ingestion process, including encoding, decoding and low complexity subsequence filtering.
