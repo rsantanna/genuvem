@@ -26,6 +26,7 @@ Please, refer to the [Genoogle](https://github.com/felipealbrecht/Genoogle) proj
 add and encode FASTA files, and how to tweak the configuration parameters.
 
 ## Setup
+
 Now, you can run the setup script located in the `scripts/` folder.
 
 **Disclaimer:** This script will create the necessary buckets if they don't exist and sync the resources folder with the
@@ -100,3 +101,10 @@ contains a Spark script to execute and visualize the query results, and also vis
 The Zeppelin web interface is available from the Dataproc cluster console.
 Just open the Cluster Details and click on the Web Interfaces tab. Zeppelin should be the last link in the Component
 Gateway list.
+
+## Legacy
+
+This repository keeps the history of initial iterations in the following read-only branches:
+- [v1-hadoop](tree/v1-hadoop): used for an initial assessment of Hadoop MapReduce and the Fastdoop library.
+- [v2-genlastic](tree/v2-genlastic): intended to reimplement Genoogle on Spark, it has a fully-functional FASTA
+  ingestion process, including encoding, decoding and low complexity subsequence filtering.
