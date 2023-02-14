@@ -56,7 +56,7 @@ RUN wget https://downloads.lightbend.com/scala/${SCALA_VERSION}/scala-${SCALA_VE
 
 # Build Genoogle and remove default configuration and example files
 WORKDIR ${GENOOGLE_HOME}
-RUN git clone https://github.com/rsantanna/Genoogle.git . && \
+RUN git clone https://github.com/felipealbrecht/Genoogle.git . && \
     ant jar && \
     mv ./ant-build/genoogle.jar . && \
     rm -r ./conf && \

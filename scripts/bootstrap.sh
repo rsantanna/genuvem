@@ -19,7 +19,7 @@ echo "Successfully installed custom packages."
 echo "Installing Genoogle at $GENOOGLE_HOME..."
 mkdir -p "$GENOOGLE_HOME"
 cd "$GENOOGLE_HOME" || exit
-git clone https://github.com/rsantanna/Genoogle.git .
+git clone https://github.com/felipealbrecht/Genoogle.git .
 ant jar
 mv ./ant-build/genoogle.jar .
 

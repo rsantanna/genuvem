@@ -12,7 +12,7 @@ RUN apk -U upgrade && \
     apk add --no-cache bash git openjdk8 apache-ant
 
 # Get the latest Genoogle and remove default configuration and example files
-RUN git clone https://github.com/rsantanna/Genoogle.git . && \
+RUN git clone https://github.com/felipealbrecht/Genoogle.git . && \
     ant jar && \
     mv ./ant-build/genoogle.jar . && \
     rm -r ./conf && \
